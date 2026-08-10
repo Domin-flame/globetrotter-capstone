@@ -1,0 +1,481 @@
+[
+  {
+    "id": 1,
+    "name": "Musée National du Cameroun",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "description": "Installé dans l'ancien palais présidentiel construit par le gouverneur Marchand, il retrace la diversité ethnique et artistique du Cameroun à travers objets d'art, tenues traditionnelles et sculptures.",
+    "tags": [
+      "culture",
+      "histoire",
+      "musée"
+    ],
+    "avg_cost_per_day": 1000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/DMYYyP8mzN0",
+      "media_note": "Chercher sur YouTube : 'Musée National du Cameroun Yaoundé visite'",
+      "ambient_sound_url": "",
+      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Mus%C3%A9e_National_du_Cameroun_01.JPG/1920px-Mus%C3%A9e_National_du_Cameroun_01.JPG?utm_source=fr.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Musée National du Cameroun Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Course courte depuis le centre-ville"
+      },
+      {
+        "mode": "à pied",
+        "notes": "Accessible depuis le centre administratif"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Basilique Marie-Reine-des-Apôtres",
+    "neighborhood": "Mvolyé, Yaoundé",
+    "description": "L'un des édifices religieux les plus importants du Cameroun, perchée sur la colline de Mvolyé avec une vue dégagée sur la ville.",
+    "tags": [
+      "religieux",
+      "panorama",
+      "architecture"
+    ],
+    "avg_cost_per_day": 0,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/3UJN9gKcpng",
+      "media_note": "Chercher : 'Basilique Mvolyé Yaoundé vue panoramique'",
+      "ambient_sound_url": "",
+      "photo_url": "https://tse4.mm.bing.net/th/id/OIP.Mf4XWN_O2ibTSx8IN2M6cAHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Basilique Marie-Reine-des-Apôtres Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Montée assez raide, prévoir un peu de marche depuis l'arrêt"
+      },
+      {
+        "mode": "moto-taxi",
+        "notes": "Peut monter plus près de l'entrée"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Mont Fébé et monastère bénédictin",
+    "neighborhood": "Fébé, Yaoundé",
+    "description": "Point culminant à environ 1000 mètres offrant une vue panoramique sur les sept collines de Yaoundé ; abrite aussi un monastère bénédictin et son musée d'art sacré.",
+    "tags": [
+      "nature",
+      "panorama",
+      "randonnée",
+      "religieux"
+    ],
+    "avg_cost_per_day": 2000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/Hx2j6gCpFno",
+      "media_note": "Chercher : 'Mont Fébé Yaoundé vue drone' pour une vidéo aérienne immersive",
+      "ambient_sound_url": "",
+      "photo_url": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/24/44/0d/e4/mont-febe-open-view-from.jpg?w=1200&h=1200&s=1",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Mont Fébé et monastère bénédictin Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Route en montée, prévoir un tarif un peu plus élevé"
+      },
+      {
+        "mode": "véhicule personnel",
+        "notes": "Recommandé pour la flexibilité, parking disponible"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Monument de la Réunification",
+    "neighborhood": "Centre administratif, Yaoundé",
+    "description": "Situé près de l'Assemblée nationale, ce monument commémore la réunification du Cameroun britannique et français en 1961.",
+    "tags": [
+      "histoire",
+      "monument"
+    ],
+    "avg_cost_per_day": 0,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/iaMO2D7i1Fk",
+      "media_note": "Chercher : 'Monument Réunification Yaoundé histoire'",
+      "ambient_sound_url": "",
+      "photo_url": "https://images.pexels.com/photos/17290983/pexels-photo-17290983.jpeg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Monument de la Réunification Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Bien connu de tous les chauffeurs de la ville"
+      },
+      {
+        "mode": "moto-taxi",
+        "notes": "Rapide depuis les quartiers voisins"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Marché Central",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "description": "Marché emblématique du centre-ville, réputé pour l'artisanat local et une immersion directe dans la vie quotidienne yaoundéenne.",
+    "tags": [
+      "marché",
+      "artisanat",
+      "shopping"
+    ],
+    "avg_cost_per_day": 500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/mfg9yVWn9h4",
+      "media_note": "Chercher : 'Marché Central Yaoundé ambiance'",
+      "ambient_sound_url": "",
+      "photo_url": "https://images.pexels.com/photos/17290971/pexels-photo-17290971.jpeg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Marché Central Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Très bien desservi, arrêt connu de tous les chauffeurs"
+      },
+      {
+        "mode": "moto-taxi",
+        "notes": "Pratique pour éviter les embouteillages"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money",
+      "MTN Mobile Money"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Marché Mokolo",
+    "neighborhood": "Mokolo, Yaoundé",
+    "description": "Le plus grand marché populaire de Yaoundé, incontournable pour découvrir le rythme et l'effervescence commerciale de la ville.",
+    "tags": [
+      "marché",
+      "vie locale",
+      "shopping"
+    ],
+    "avg_cost_per_day": 500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/sHT6HxxmWfg",
+      "media_note": "Chercher : 'Marché Mokolo Yaoundé'",
+      "ambient_sound_url": "",
+      "photo_url": "https://images.pexels.com/photos/37606674/pexels-photo-37606674.jpeg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Marché Mokolo Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Quartier animé, prévoir un peu de marche selon le trafic"
+      },
+      {
+        "mode": "moto-taxi",
+        "notes": "Rapide et économique"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money",
+      "MTN Mobile Money"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Parc zoo-botanique de Mvog-Betsi",
+    "neighborhood": "Mvog-Betsi, Yaoundé",
+    "description": "Parc zoologique et jardin botanique présentant la faune et la flore locales, une sortie appréciée en famille.",
+    "tags": [
+      "nature",
+      "famille",
+      "animaux"
+    ],
+    "avg_cost_per_day": 1500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/Ld8MwNBn_R4",
+      "media_note": "Chercher : 'Parc zoo botanique Mvog-Betsi Yaoundé'",
+      "ambient_sound_url": "",
+      "photo_url": "https://yaounde6.cm/wp-content/uploads/2025/09/caption-2.jpg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Parc zoo-botanique de Mvog-Betsi Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Course depuis le centre-ville, quartier résidentiel calme"
+      },
+      {
+        "mode": "véhicule personnel",
+        "notes": "Parking disponible sur place"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Lac Municipal",
+    "neighborhood": "Centre administratif, Yaoundé",
+    "description": "Plan d'eau au cœur de la ville, apprécié pour la promenade, la pêche et les balades en pédalo.",
+    "tags": [
+      "détente",
+      "nature",
+      "loisirs"
+    ],
+    "avg_cost_per_day": 1000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/KQ8Vjh0BuAQ",
+      "media_note": "Chercher : 'Lac Municipal Yaoundé promenade'",
+      "ambient_sound_url": "",
+      "photo_url": "https://prod.cdn-medias.jeuneafrique.com/cdn-cgi/image/q=auto,f=auto,metadata=none,width=1215,fit=cover/https://prod.cdn-medias.jeuneafrique.com/medias/2025/01/20/jad20250120-ass-lac_m_yaounde.jpg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Lac Municipal Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Central, accessible depuis n'importe quel quartier"
+      },
+      {
+        "mode": "à pied",
+        "notes": "Facilement accessible depuis le centre-ville"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money",
+      "MTN Mobile Money"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Cathédrale Notre-Dame des Victoires",
+    "neighborhood": "Mvog-Ada, Yaoundé",
+    "description": "Cathédrale toujours en construction, avenue Monseigneur Vogt, non loin de l'aéroport ; un lieu de vie et de culte marquant du quartier.",
+    "tags": [
+      "religieux",
+      "architecture"
+    ],
+    "avg_cost_per_day": 0,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/BzFzBVS_tyE",
+      "media_note": "Chercher : 'Cathédrale Notre-Dame des Victoires Yaoundé'",
+      "ambient_sound_url": "",
+      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/d/de/Cath%C3%A9drale_Notre-Dame_Yaound%C3%A9.jpg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Cathédrale Notre-Dame des Victoires Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Quartier proche de l'aéroport, bien desservi"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Musée d'Art Camerounais (Musée du Monastère)",
+    "neighborhood": "Mont Fébé, Yaoundé",
+    "description": "Installé dans l'ancien monastère des Bénédictins, il présente une collection de masques, sculptures et objets rituels camerounais.",
+    "tags": [
+      "culture",
+      "art",
+      "musée"
+    ],
+    "avg_cost_per_day": 1500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/1VeM85SGVXg",
+      "media_note": "Chercher : 'Musée du Monastère Mont Fébé'",
+      "ambient_sound_url": "",
+      "photo_url": "https://monasteremontfebe.com/images/Musee/20201210_085654.jpg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Musée d'Art Camerounais (Musée du Monastère) Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Même trajet que pour le Mont Fébé"
+      },
+      {
+        "mode": "véhicule personnel",
+        "notes": "Parking disponible sur le site du monastère"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Croix de Lorraine (Monument Leclerc)",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "description": "Première Croix de Lorraine érigée en Afrique, commémorant l'appel au rassemblement des gaullistes lancé en 1940 et la libération de Yaoundé.",
+    "tags": [
+      "histoire",
+      "monument"
+    ],
+    "avg_cost_per_day": 0,
+    "media": {
+      "video_embed_url": "",
+      "media_note": "Chercher : 'Croix de Lorraine Yaoundé histoire'",
+      "ambient_sound_url": "",
+      "photo_url": "",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : ' '"
+    },
+    "transport_options": [
+      {
+        "mode": "à pied",
+        "notes": "En plein centre-ville, facilement accessible"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Bois Sainte-Anastasie",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "description": "Havre de verdure en plein cœur de la ville, idéal pour se détendre et faire une pause loin de l'agitation urbaine.",
+    "tags": [
+      "détente",
+      "nature"
+    ],
+    "avg_cost_per_day": 0,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/pJd8-RFH2Ic",
+      "media_note": "Chercher : 'Bois Sainte-Anastasie Yaoundé'",
+      "ambient_sound_url": "",
+      "photo_url": "https://camerounreservation.com/wp-content/uploads/2025/11/bois-sainte-anastasie2.jpg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Bois Sainte-Anastasie Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "à pied",
+        "notes": "Accessible depuis le centre-ville"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Quartier Bastos",
+    "neighborhood": "Bastos, Yaoundé",
+    "description": "Quartier résidentiel et diplomatique de Yaoundé, connu pour ses ambassades, ses restaurants et sa vie nocturne animée.",
+    "tags": [
+      "urbain",
+      "gastronomie",
+      "vie nocturne"
+    ],
+    "avg_cost_per_day": 3000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/f1XlEhb2sKo",
+      "media_note": "Chercher : 'Bastos Yaoundé quartier restaurants'",
+      "ambient_sound_url": "",
+      "photo_url": "https://a0.muscache.com/im/pictures/b1360d7f-6861-4d95-a670-03676422a5ed.jpg",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Quartier Bastos Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Bien desservi, tarifs légèrement plus élevés que la moyenne"
+      },
+      {
+        "mode": "véhicule personnel",
+        "notes": "Stationnement facile dans la plupart des établissements"
+      }
+    ],
+    "payment_methods": [
+      "Orange Money",
+      "MTN Mobile Money",
+      "Carte bancaire",
+      "Espèces"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Eco park",
+    "neighborhood": "Warda, Yaoundé",
+    "description": "Le plus grand marché populaire de Yaoundé, incontournable pour découvrir le rythme et l'effervescence commerciale de la ville.",
+    "tags": [
+      "détente",
+      "nature",
+      "loisirs"
+    ],
+    "avg_cost_per_day": 500,
+    "media": {
+      "video_embed_url": "",
+      "media_note": "Chercher : 'Eco Park Yaounde'",
+      "ambient_sound_url": "",
+      "photo_url": "https://images.unsplash.com/photo-1659947234279-92bc8f2cd2fe?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Eco Park Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Quartier animé, prévoir un peu de marche selon le trafic"
+      },
+      {
+        "mode": "moto-taxi",
+        "notes": "Rapide et économique"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money",
+      "MTN Mobile Money"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Village Artisanal",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "description": "Espace regroupant artisans et sculpteurs camerounais, parfait pour observer le travail du bois et de l'art traditionnel en direct.",
+    "tags": [
+      "artisanat",
+      "culture",
+      "shopping"
+    ],
+    "avg_cost_per_day": 500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/ZJ1dbtpYhp8",
+      "media_note": "Chercher : 'Village Artisanal Yaoundé sculpteurs'",
+      "ambient_sound_url": "",
+      "photo_url": "https://scontent.fkbi1-1.fna.fbcdn.net/v/t39.30808-6/474931110_1062338432605746_5603699754258469144_n.jpg?stp=dst-jpg_tt6&cstp=mx2048x1365&ctp=s2048x1365&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=__cij8rG2zcQ7kNvwG8u_Rh&_nc_oc=Adrcc6PcPWR1jEHDJAxhHBk1vsG6AHBe9zXzM2VibqcOP1wM9wuyBCHSlQryYKiufjw&_nc_zt=23&_nc_ht=scontent.fkbi1-1.fna&_nc_gid=tEioLXFZbvu-zb0rrdi3dg&_nc_ss=7b289&oh=00_AQFH5piEogve9TVHx6qQPIcLvsx0pH5R6ql7ozF3ebkBjw&oe=6A7C7CD4",
+      "photo_note": "Chercher une photo libre de droits sur Pexels/Unsplash : 'Village Artisanal Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Central, accessible depuis le centre-ville"
+      },
+      {
+        "mode": "moto-taxi",
+        "notes": "Rapide et économique"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  }
+]

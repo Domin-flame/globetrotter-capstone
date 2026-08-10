@@ -1,135 +1,86 @@
-# GlobeTrotter – Travel Assistant
+# GlobeTrotter — Phase 2 : Microservices
 
-GlobeTrotter is a **monolithic Flask application** that serves as the starting point for a semester-long capstone project.  
-Students build the monolith first, then refactor it into microservices, and finally deploy it to the cloud with resilience patterns using Docker, Kubernetes, and cloud-native tooling.
+Découpage du monolithe en 3 services indépendants + 1 API Gateway,
+conforme au diagramme du cours (slide "Phase 2 – Microservices").
 
----
-
-## Project Structure
+## Architecture
 
 ```
-.
-├── app/
-│   ├── __init__.py         # Flask app factory
-│   ├── models.py           # Data models and JSON file I/O
-│   ├── auth.py             # Registration, login, JWT handling
-│   ├── destinations.py     # Destination search endpoint
-│   ├── recommendations.py  # Personalised recommendations endpoint
-│   ├── itineraries.py      # Create / list itineraries
-│   └── main.py             # App entry point
-├── data/
-│   ├── destinations.json   # Static destination catalogue (seed data)
-│   ├── users.json          # Created at runtime
-│   └── itineraries.json    # Created at runtime
-├── tests/                  # Placeholder for future tests
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
+Client → API Gateway (5000) ──→ User Service (5001)          → users.json
+                              ├─→ Itinerary Service (5002)    → itineraries.json
+                              └─→ Recommendation Service (5003) → destinations.json
+                                        │
+                                        └── appel REST interne vers
+                                            User Service pour récupérer
+                                            les préférences
 ```
 
----
+- **User Service** : `POST /register`, `POST /login`, + une route interne
+  `GET /internal/preferences/<username>` (jamais exposée publiquement,
+  utilisée uniquement par le Recommendation Service sur le réseau Docker).
+- **Itinerary Service** : `POST /itineraries`, `GET /itineraries` — vérifie
+  le JWT localement (secret partagé), sans appeler le User Service.
+- **Recommendation Service** : `GET /destinations`, `GET /recommendations`
+  — pour `/recommendations`, fait un **vrai appel HTTP** au User Service
+  pour récupérer les préférences (c'est l'exemple donné explicitement
+  dans le cours). C'est la différence entre "faire semblant" de découper
+  et une vraie décomposition en microservices.
+- **API Gateway** : point d'entrée unique, route chaque requête vers le
+  bon service, et sert aussi le frontend — donc tout reste accessible
+  depuis une seule URL, sans souci de CORS.
 
-## REST API
+## ⚠️ Avant de lancer : récupère tes vraies données
 
-| Method | Endpoint            | Auth required | Description                              |
-|--------|---------------------|---------------|------------------------------------------|
-| POST   | `/register`         | No            | Register a new user                      |
-| POST   | `/login`            | No            | Authenticate and receive a JWT token     |
-| GET    | `/destinations`     | No            | Search the destination catalogue         |
-| GET    | `/recommendations`  | Yes (JWT)     | Get personalised recommendations        |
-| POST   | `/itineraries`      | Yes (JWT)     | Create a new itinerary                   |
-| GET    | `/itineraries`      | Yes (JWT)     | List all itineraries for the logged-in user |
-
-Protected routes expect the header:  
-`Authorization: Bearer <your-token>`
-
-### Example requests
+Les fichiers `data/*.json` de chaque service sont vides (`[]`) pour l'instant.
+Copie tes vraies données depuis ton projet monolithe :
 
 ```bash
-# Register
-curl -X POST http://localhost:5000/register \
-  -H "Content-Type: application/json" \
-  -d '{"username": "alice", "password": "s3cr3t", "preferences": ["beach", "food"]}'
-
-# Login
-curl -X POST http://localhost:5000/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "alice", "password": "s3cr3t"}'
-# Save the returned token: TOKEN=<value from .token field>
-
-# Search destinations
-curl "http://localhost:5000/destinations?tag=beach&max_cost=100"
-
-# Personalised recommendations
-curl http://localhost:5000/recommendations \
-  -H "Authorization: Bearer $TOKEN"
-
-# Create an itinerary
-curl -X POST http://localhost:5000/itineraries \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"title": "Beach Escape", "destinations": ["Bali"], "start_date": "2025-07-01", "end_date": "2025-07-14"}'
-
-# List itineraries
-curl http://localhost:5000/itineraries \
-  -H "Authorization: Bearer $TOKEN"
+cp /chemin/vers/ancien/projet/data/users.json         user-service/data/users.json
+cp /chemin/vers/ancien/projet/data/itineraries.json   itinerary-service/data/itineraries.json
+cp /chemin/vers/ancien/projet/data/destinations.json  recommendation-service/data/destinations.json
 ```
 
----
-
-## Running Locally
-
-### Prerequisites
-- Python 3.9+
-- pip
+## Lancer tout avec Docker Compose
 
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
-
-# 2. Start the server
-python app/main.py
+docker compose up --build
 ```
 
-The API will be available at `http://localhost:5000`.
+Puis ouvre **http://localhost:5000/** — le frontend est servi directement
+par le Gateway, tout passe par le port 5000.
 
----
+Vérifier que tous les services sont en vie :
+```
+http://localhost:5000/health
+```
+→ renvoie le statut du Gateway + des 3 services.
 
-## Running with Docker
+## Lancer sans Docker (pour déboguer un service isolément)
 
+Dans 4 terminaux séparés :
 ```bash
-# Build and start
-docker-compose up --build
-
-# Stop
-docker-compose down
+cd user-service && pip install -r requirements.txt && python app.py
+cd itinerary-service && pip install -r requirements.txt && python app.py
+cd recommendation-service && pip install -r requirements.txt && python app.py
+cd gateway && pip install -r requirements.txt && python app.py
 ```
+Sans Docker Compose, les variables d'environnement `USER_SERVICE_URL` etc.
+ne sont pas définies automatiquement — elles retombent sur `localhost`
+par défaut, donc ça marche aussi tant que tu lances tout sur la même
+machine.
 
-The `data/` directory is mounted into the container, so JSON files persist between runs.
+## Ce qui correspond au cahier des charges du cours (slide 78)
 
----
+| Exigence du cours | Où c'est fait |
+|---|---|
+| 3 services indépendants | `user-service/`, `itinerary-service/`, `recommendation-service/` |
+| Chaque service possède ses propres données | 1 fichier JSON par service, aucun partage direct |
+| Communication synchrone REST inter-services | Recommendation Service → User Service via `requests` |
+| API Gateway comme point d'entrée unique | `gateway/app.py` |
+| Déployé via Docker Compose | `docker-compose.yml` à la racine |
 
-## Data Storage
+## Prochaine étape suggérée (Phase 3 du cours)
 
-All data is persisted in plain JSON files inside the `data/` directory:
-
-| File                    | Purpose                              |
-|-------------------------|--------------------------------------|
-| `data/destinations.json`| Static catalogue of travel destinations (seed data) |
-| `data/users.json`       | Registered users (created at runtime) |
-| `data/itineraries.json` | User itineraries (created at runtime) |
-
-> **Note:** `data/*.json` (except `destinations.json`) are excluded from version control via `.gitignore`.
-
----
-
-## Configuration
-
-| Environment Variable | Default                              | Description           |
-|----------------------|--------------------------------------|-----------------------|
-| `SECRET_KEY`         | `globetrotter-secret-change-in-prod` | JWT signing key – **must be overridden in production** |
-| `FLASK_DEBUG`        | `0`                                  | Set to `1` to enable Flask debug mode (development only) |
-| `PORT`               | `5000`                               | Port the app listens on |
-
-> **Important:** Always set `SECRET_KEY` to a long, random value in production (e.g. `python -c "import secrets; print(secrets.token_hex(32))"`).
+Containeriser proprement pour le cloud, load balancing, auto-scaling —
+mais un service à la fois, seulement une fois que cette Phase 2 tourne
+et est validée.

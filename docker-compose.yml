@@ -1,13 +1,57 @@
 version: "3.9"
 
 services:
-  globetrotter:
-    build: .
-    container_name: globetrotter_app
+  user-service:
+    build: ./user-service
+    ports:
+      - "5001:5001"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
+    volumes:
+      - ./user-service/data:/app/data
+    networks:
+      - globetrotter-net
+
+  itinerary-service:
+    build: ./itinerary-service
+    ports:
+      - "5002:5002"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
+    volumes:
+      - ./itinerary-service/data:/app/data
+    networks:
+      - globetrotter-net
+
+  recommendation-service:
+    build: ./recommendation-service
+    ports:
+      - "5003:5003"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
+      - USER_SERVICE_URL=http://user-service:5001
+    volumes:
+      - ./recommendation-service/data:/app/data
+    networks:
+      - globetrotter-net
+    depends_on:
+      - user-service
+
+  gateway:
+    build: ./gateway
     ports:
       - "5000:5000"
-    # Mount local code so changes are reflected without rebuilding the image
-    volumes:
-      - .:/globetrotter
     environment:
-      - PORT=5000
+      - USER_SERVICE_URL=http://user-service:5001
+      - ITINERARY_SERVICE_URL=http://itinerary-service:5002
+      - RECOMMENDATION_SERVICE_URL=http://recommendation-service:5003
+    networks:
+      - globetrotter-net
+    depends_on:
+      - user-service
+      - itinerary-service
+      - recommendation-service
+
+networks:
+  globetrotter-net:
+    driver: bridge

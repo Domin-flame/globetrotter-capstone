@@ -42,6 +42,13 @@ def _register_and_login(client, username="alice", password="secret123", preferen
     return {"Authorization": f"Bearer {token}"}
 
 
+def test_home_page_serves_frontend(client):
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert b"<!DOCTYPE html>" in resp.data
+    assert b"GlobeTrotter" in resp.data
+
+
 def test_register_creates_user(client):
     resp = client.post("/register", json={"username": "bob", "password": "secret123", "preferences": ["nature"]})
     assert resp.status_code == 201
