@@ -1,0 +1,73 @@
+# render.yaml — à placer à la RACINE de ton repo (à côté de gateway/, user-service/, etc.)
+#
+# Déploiement : sur render.com → "New" → "Blueprint" → connecte ton repo GitHub.
+# Render détecte ce fichier automatiquement et propose de créer les 4 services d'un coup.
+#
+# ⚠️ IMPORTANT — à faire APRÈS le premier déploiement :
+# Les URLs ci-dessous (globetrotter-user.onrender.com etc.) sont des noms
+# probables mais Render peut légèrement les modifier si le nom est déjà pris.
+# Une fois les 4 services créés, vérifie l'URL réelle de chacun (visible dans
+# le dashboard Render) et corrige les variables d'environnement si besoin
+# (Dashboard → service → Environment → modifier la valeur → Save → redeploy).
+#
+# ⚠️ JWT_SECRET : les 3 services (user, itinerary, recommendation) DOIVENT
+# avoir exactement la MÊME valeur, sinon les jetons générés par user-service
+# seront rejetés par les deux autres. Choisis une chaîne aléatoire longue et
+# colle-la manuellement (à l'identique) dans les 3 services après le premier
+# déploiement — ne laisse jamais la valeur par défaut "dev-secret-change-me"
+# en production.
+
+services:
+  - type: web
+    name: globetrotter-gateway
+    runtime: docker
+    dockerfilePath: ./gateway/Dockerfile
+    dockerContext: ./gateway
+    plan: free
+    envVars:
+      - key: USER_SERVICE_URL
+        value: https://globetrotter-user.onrender.com
+      - key: ITINERARY_SERVICE_URL
+        value: https://globetrotter-itinerary.onrender.com
+      - key: RECOMMENDATION_SERVICE_URL
+        value: https://globetrotter-recommendation.onrender.com
+
+  - type: web
+    name: globetrotter-user
+    runtime: docker
+    dockerfilePath: ./user-service/Dockerfile
+    dockerContext: ./user-service
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        sync: false   # à définir manuellement dans le dashboard Render — voir note ci-dessus
+      - key: GOOGLE_CLIENT_ID
+        value: TON_CLIENT_ID.apps.googleusercontent.com
+      - key: ADMIN_USERNAMES
+        value: dominicbediguile@gmail.com
+
+  - type: web
+    name: globetrotter-itinerary
+    runtime: docker
+    dockerfilePath: ./itinerary-service/Dockerfile
+    dockerContext: ./itinerary-service
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        sync: false   # même valeur EXACTE que user-service
+      - key: ADMIN_USERNAMES
+        value: dominicbediguile@gmail.com
+
+  - type: web
+    name: globetrotter-recommendation
+    runtime: docker
+    dockerfilePath: ./recommendation-service/Dockerfile
+    dockerContext: ./recommendation-service
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        sync: false   # même valeur EXACTE que user-service
+      - key: USER_SERVICE_URL
+        value: https://globetrotter-user.onrender.com
+      - key: ADMIN_USERNAMES
+        value: dominicbediguile@gmail.com
