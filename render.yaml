@@ -19,21 +19,21 @@
 
 services:
   - type: web
-    name: globetrotter-gateway
+    name: dzula-gateway
     runtime: docker
     dockerfilePath: ./gateway/Dockerfile
     dockerContext: ./gateway
     plan: free
     envVars:
       - key: USER_SERVICE_URL
-        value: https://globetrotter-user.onrender.com
+        value: https://dzula-user.onrender.com
       - key: ITINERARY_SERVICE_URL
-        value: https://globetrotter-itinerary.onrender.com
+        value: https://dzula-itinerary.onrender.com
       - key: RECOMMENDATION_SERVICE_URL
-        value: https://globetrotter-recommendation.onrender.com
+        value: https://dzula-recommendation.onrender.com
 
   - type: web
-    name: globetrotter-user
+    name: dzula-user
     runtime: docker
     dockerfilePath: ./user-service/Dockerfile
     dockerContext: ./user-service
@@ -42,12 +42,12 @@ services:
       - key: JWT_SECRET
         sync: false   # à définir manuellement dans le dashboard Render — voir note ci-dessus
       - key: GOOGLE_CLIENT_ID
-        value: TON_CLIENT_ID.apps.googleusercontent.com
+        value: 463172768839-mdof8vqp67r20vj5ca5gofv070ddsmv2.apps.googleusercontent.com
       - key: ADMIN_USERNAMES
         value: dominicbediguile@gmail.com
 
   - type: web
-    name: globetrotter-itinerary
+    name: dzula-itinerary
     runtime: docker
     dockerfilePath: ./itinerary-service/Dockerfile
     dockerContext: ./itinerary-service
@@ -59,7 +59,7 @@ services:
         value: dominicbediguile@gmail.com
 
   - type: web
-    name: globetrotter-recommendation
+    name: dzula-recommendation
     runtime: docker
     dockerfilePath: ./recommendation-service/Dockerfile
     dockerContext: ./recommendation-service
@@ -68,6 +68,6 @@ services:
       - key: JWT_SECRET
         sync: false   # même valeur EXACTE que user-service
       - key: USER_SERVICE_URL
-        value: https://globetrotter-user.onrender.com
+        value: https://dzula-user.onrender.com
       - key: ADMIN_USERNAMES
         value: dominicbediguile@gmail.com
