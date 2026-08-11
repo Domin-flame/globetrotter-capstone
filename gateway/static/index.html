@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GlobeTrotter — Yaoundé</title>
+<title>Dzula — Yaoundé</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -47,6 +48,7 @@
   }
   .brand { display: flex; align-items: baseline; gap: 10px; cursor: pointer; }
   .brand-mark { font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 22px; }
+  .brand-logo { display: inline-flex; align-items: center; color: var(--gold); vertical-align: -7px; margin-right: 6px; }
   .brand-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.5px; color: var(--gold); }
 
   .session-area { display: flex; align-items: center; gap: 14px; }
@@ -242,6 +244,23 @@
 
   /* ===== Developer drawer (collapsed by default) ===== */
   .dev-drawer { max-width: 1080px; margin: 40px auto 0; padding: 0 24px; display: none; }
+
+  /* ===== Footer ===== */
+  .site-footer { background: var(--ink); color: rgba(255,255,255,0.85); margin-top: 50px; }
+  .footer-inner { max-width: 1080px; margin: 0 auto; padding: 40px 24px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; }
+  .footer-brand { color: var(--gold); }
+  .footer-brand .brand-logo { color: var(--gold); vertical-align: -6px; margin-right: 6px; }
+  .footer-brand-name { font-family: var(--serif); font-style: italic; font-weight: 700; font-size: 20px; color: var(--gold); }
+  .footer-tagline { margin-top: 10px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.7); max-width: 320px; }
+  .footer-faq h4 { font-family: var(--serif); font-size: 15px; margin: 0 0 12px; color: rgba(255,255,255,0.9); }
+  .footer-faq details { border-bottom: 1px solid rgba(255,255,255,0.15); padding: 10px 0; }
+  .footer-faq summary { cursor: pointer; font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.9); }
+  .footer-faq p { margin: 8px 0 2px; font-size: 12.5px; line-height: 1.6; color: rgba(255,255,255,0.65); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.15); text-align: center; padding: 14px; font-family: var(--mono); font-size: 10.5px; color: rgba(255,255,255,0.5); }
+
+  @media (max-width: 720px) {
+    .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  }
   .dev-toggle {
     font-family: var(--mono); font-size: 11px; color: var(--ink-soft); background: none; border: 1px dashed var(--ink-soft);
     padding: 6px 12px; border-radius: 4px;
@@ -286,12 +305,20 @@
   .transport-row .mode { font-family: var(--mono); font-weight: 600; color: var(--lagoon); min-width: 110px; text-transform: uppercase; font-size: 10.5px; }
   .payment-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
+  .hamburger-btn { display: none; background: none; border: 1px solid var(--ink); border-radius: 4px; padding: 6px 8px; cursor: pointer; color: var(--ink); }
+
   @media (max-width: 720px) {
     .topbar { flex-wrap: wrap; row-gap: 10px; padding: 12px 16px; }
     .session-area { flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
-    .tabbar { padding: 8px 12px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .tabbar::-webkit-scrollbar { display: none; }
-    .tab { white-space: nowrap; padding: 10px 12px; }
+    .hamburger-btn { display: inline-flex; }
+    .tabbar {
+      flex-direction: column; align-items: stretch; width: 100%;
+      max-height: 0; overflow: hidden; padding: 0 16px; margin: 0;
+      transition: max-height 0.25s ease, padding 0.25s ease;
+    }
+    .tabbar.mobile-open { max-height: 320px; padding: 10px 16px 14px; }
+    .tab { white-space: normal; text-align: left; padding: 12px 6px; border-bottom: 1px dashed var(--line); border-radius: 0; }
+    .tab:last-child { border-bottom: none; }
     main { padding: 24px 16px 60px; }
     .hero { padding: 26px 20px; }
     .hero h1 { font-size: 26px; }
@@ -317,12 +344,22 @@
 
 <div class="topbar">
   <div class="brand" onclick="goHome()">
-    <span class="brand-mark">GlobeTrotter</span>
+    <span class="brand-logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="9.5"/>
+        <path d="M15.5 8.5l-2.2 5.3-5.3 2.2 2.2-5.3 5.3-2.2z" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="1" fill="var(--paper)" stroke="none"/>
+      </svg>
+    </span>
+    <span class="brand-mark">Dzula</span>
     <span class="brand-tag">YAOUNDÉ</span>
   </div>
   <div class="session-area" id="sessionArea">
     <button class="btn btn-ghost" onclick="showView('auth')">Se connecter</button>
   </div>
+  <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
 </div>
 
 <div class="tabbar" id="tabbar" style="display:none;">
@@ -494,6 +531,39 @@
 
 </main>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9.5"/>
+          <path d="M15.5 8.5l-2.2 5.3-5.3 2.2 2.2-5.3 5.3-2.2z" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1" fill="var(--ink)" stroke="none"/>
+        </svg>
+      </span>
+      <span class="footer-brand-name">Dzula</span>
+      <p class="footer-tagline">« Dzula » — voyage, exploration. Un guide local pour découvrir Yaoundé autrement.</p>
+    </div>
+
+    <div class="footer-faq">
+      <h4>Questions fréquentes</h4>
+      <details>
+        <summary>Comment fonctionnent les recommandations ?</summary>
+        <p>On croise les centres d'intérêt choisis dans ton compte avec les tags de chaque destination pour te proposer les lieux les plus pertinents.</p>
+      </details>
+      <details>
+        <summary>Mes données sont-elles partagées ?</summary>
+        <p>Non. Tes centres d'intérêt et tes itinéraires ne servent qu'à te faire des recommandations personnalisées.</p>
+      </details>
+      <details>
+        <summary>Puis-je proposer un lieu qui manque ?</summary>
+        <p>Oui — écris-nous, on complète régulièrement la liste avec les retours de la communauté.</p>
+      </details>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Dzula — Projet étudiant, ICT University</div>
+</footer>
+
 <div class="dev-drawer" id="devDrawer">
   <button class="dev-toggle" onclick="toggleDevConsole()">Mode développeur — journal des appels API</button>
   <div class="dev-console" id="devConsole">
@@ -513,7 +583,7 @@ let USER_PREFS = [];
 // La vraie autorisation est imposée côté serveur (ADMIN_USERNAMES sur
 // chaque service) — même si quelqu'un force l'accès en JS, le backend
 // refusera. Mets ici ton propre email/username Google.
-const ADMIN_USERNAME = "dominicbediguile@gmail.com";
+const ADMIN_USERNAME = "TON_EMAIL_ADMIN@exemple.com";
 function isAdmin() { return USERNAME === ADMIN_USERNAME; }
 
 // ===================== Icônes (SVG dessinées à la main, traits fins) =====================
@@ -597,11 +667,15 @@ function showView(name) {
   document.getElementById('view-' + name).classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('tabbar').classList.remove('mobile-open'); // referme le menu hamburger après un clic
 
   if (name === 'recommendations') loadRecommendations();
   if (name === 'itineraries') loadItineraries();
   if (name === 'account') renderAccount();
   if (name === 'admin') loadAdminStats();
+}
+function toggleMobileNav() {
+  document.getElementById('tabbar').classList.toggle('mobile-open');
 }
 function goHome() { showView('explore'); }
 
