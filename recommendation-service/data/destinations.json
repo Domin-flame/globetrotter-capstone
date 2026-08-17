@@ -460,7 +460,7 @@
     "category": "attraction"
   },
   {
-    "id": 15,
+    "id": 14,
     "name": "Village Artisanal",
     "neighborhood": "Centre-ville, Yaoundé",
     "description": "Espace regroupant artisans et sculpteurs camerounais, parfait pour observer le travail du bois et de l'art traditionnel en direct.",
@@ -748,6 +748,11 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
+    ],
+    "points_of_sale": [
+      "La Maison Blanche",
+      "Les Cigalons",
+      "Marché Central"
     ]
   },
   {
@@ -772,6 +777,10 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
+    ],
+    "points_of_sale": [
+      "Restaurant Le Baobab (Djeuga Palace)",
+      "Les Cigalons"
     ]
   },
   {
@@ -795,6 +804,10 @@
     "transport_options": [],
     "payment_methods": [
       "Espèces"
+    ],
+    "points_of_sale": [
+      "Marché Central",
+      "Marché Mokolo"
     ]
   },
   {
@@ -818,6 +831,10 @@
     "transport_options": [],
     "payment_methods": [
       "Espèces"
+    ],
+    "points_of_sale": [
+      "Marché Mokolo",
+      "Marché Central"
     ]
   }
 ]
