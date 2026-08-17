@@ -305,6 +305,24 @@
   .transport-row .mode { font-family: var(--mono); font-weight: 600; color: var(--lagoon); min-width: 110px; text-transform: uppercase; font-size: 10.5px; }
   .payment-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 
+  .card-rating { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin: 2px 0 8px; }
+  .stars { display: inline-flex; gap: 1px; color: var(--line); }
+  .stars .icon.filled { color: var(--gold); }
+  .rating-summary { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; margin-bottom: 14px; }
+  .rating-summary .stars .icon { width: 16px; height: 16px; }
+
+  .review-item { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+  .review-item:last-child { border-bottom: none; }
+  .review-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 11.5px; }
+  .review-user { font-weight: 600; color: var(--ink); }
+  .review-date { color: var(--ink-soft); }
+  .review-comment { font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.5; }
+  .review-empty { font-size: 13px; color: var(--ink-soft); font-style: italic; }
+
+  .star-input { display: flex; gap: 4px; cursor: pointer; margin-bottom: 12px; }
+  .star-input .icon { width: 24px; height: 24px; color: var(--line); transition: color 0.1s; }
+  .star-input .icon.filled { color: var(--gold); }
+
   .hamburger-btn { display: none; background: none; border: 1px solid var(--ink); border-radius: 4px; padding: 6px 8px; cursor: pointer; color: var(--ink); }
 
   @media (max-width: 720px) {
@@ -387,8 +405,19 @@
       <h2>Lieux à Yaoundé</h2>
       <span class="section-sub">GET /destinations</span>
     </div>
+
+    <input type="text" id="exploreSearch" placeholder="Rechercher un lieu, un plat, un quartier…" oninput="onSearchInput()"
+      style="width:100%; max-width:420px; font-family:var(--sans); font-size:13.5px; padding:10px 14px; border:1px solid var(--ink); border-radius:20px; background:var(--paper); color:var(--ink); margin-bottom:14px;">
+
+    <div class="chip-row" id="categoryChips">
+      <span class="chip active" data-category="">Tout</span>
+      <span class="chip" data-category="attraction">Attractions</span>
+      <span class="chip" data-category="hebergement">Hébergement</span>
+      <span class="chip" data-category="restaurant">Restaurants</span>
+      <span class="chip" data-category="plat">Plats locaux</span>
+    </div>
     <div class="chip-row" id="exploreChips">
-      <span class="chip active" data-tag="">Tous</span>
+      <span class="chip active" data-tag="">Tous les tags</span>
       <span class="chip" data-tag="culture">Culture</span>
       <span class="chip" data-tag="nature">Nature</span>
       <span class="chip" data-tag="religieux">Religieux</span>
@@ -396,6 +425,8 @@
       <span class="chip" data-tag="panorama">Panorama</span>
       <span class="chip" data-tag="histoire">Histoire</span>
       <span class="chip" data-tag="détente">Détente</span>
+      <span class="chip" data-tag="cuisine locale">Cuisine locale</span>
+      <span class="chip" data-tag="confort">Confort</span>
     </div>
     <div class="grid-cards" id="exploreGrid">
       <div class="empty-state">Chargement des lieux…</div>
@@ -592,6 +623,7 @@ const ICON = {
   car: `<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8l1.5 5"/><rect x="2" y="13" width="20" height="5" rx="1.5"/><circle cx="7" cy="18.5" r="1.6"/><circle cx="17" cy="18.5" r="1.6"/></svg>`,
   wallet: `<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="2"/><path d="M2.5 10h19"/><circle cx="17" cy="14" r="1.4"/></svg>`,
   pin: `<svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>`,
+  star: `<svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.6 1.7 7-6.3-3.8-6.3 3.8 1.7-7-5.4-4.6 7.1-.6z"/></svg>`,
 };
 
 function baseUrl() {
@@ -827,15 +859,29 @@ async function handleGoogleCredential(response) {
 // ===================== Explore (public gallery) =====================
 const DEST_CACHE = {}; // id -> objet destination complet, alimenté à chaque chargement de grille
 
+function starsHtml(rating) {
+  const filled = Math.round(rating || 0);
+  let html = `<span class="stars">`;
+  for (let i = 1; i <= 5; i++) {
+    html += ICON.star.replace('class="icon"', `class="icon${i <= filled ? ' filled' : ''}"`);
+  }
+  html += `</span>`;
+  return html;
+}
+
 function cardHtml(d, opts) {
   opts = opts || {};
   DEST_CACHE[d.id] = d;
+  const CATEGORY_LABELS = { attraction: 'Attraction', hebergement: 'Hébergement', restaurant: 'Restaurant', plat: 'Plat local' };
   const badge = opts.score !== undefined
     ? `<span class="card-badge score">score ${opts.score}</span>`
-    : `<span class="card-badge">${(d.tags && d.tags[0]) || 'lieu'}</span>`;
+    : `<span class="card-badge">${CATEGORY_LABELS[d.category] || (d.tags && d.tags[0]) || 'lieu'}</span>`;
   const cost = d.avg_cost_per_day === 0
     ? 'Entrée libre'
     : (d.avg_cost_per_day ? `~ <span>${d.avg_cost_per_day} FCFA</span>` : '');
+  const ratingHtml = d.rating_count
+    ? `<div class="card-rating">${starsHtml(d.rating_avg)} ${d.rating_avg.toFixed(1)} (${d.rating_count})</div>`
+    : `<div class="card-rating" style="color:var(--ink-soft);opacity:0.7;">Pas encore noté</div>`;
   const photo = d.media && d.media.photo_url;
   const thumb = photo
     ? `<img src="${photo}" alt="${d.name}" loading="lazy">`
@@ -846,6 +892,7 @@ function cardHtml(d, opts) {
       <div class="card-body">
         <h3>${d.name || '—'}</h3>
         <div class="loc">${ICON.pin}${d.neighborhood || ''}</div>
+        ${ratingHtml}
       </div>
       <p>${d.description || ''}</p>
       <div class="tags">${(d.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
@@ -885,17 +932,109 @@ function openDetail(id) {
       <h4 class="icon-inline">${ICON.wallet} Moyens de paiement</h4>
       <div class="payment-chips">${paymentHtml}</div>
     </div>
+    <div class="info-card">
+      <h4 class="icon-inline">${ICON.star} Avis</h4>
+      <div id="reviewsContent"><div class="review-empty">Chargement des avis…</div></div>
+    </div>
   `;
   showView('detail');
+  loadReviews(d.id);
 }
 
-async function loadExplore(tag) {
+// ===================== Avis & notation =====================
+let selectedRating = 0;
+
+async function loadReviews(destId) {
+  const container = document.getElementById('reviewsContent');
+  const r = await apiCall('GET', `/destinations/${destId}/reviews`);
+  if (!r || r.status < 200 || r.status >= 300) {
+    container.innerHTML = '<div class="review-empty">Impossible de charger les avis.</div>';
+    return;
+  }
+  const { reviews, average, count } = r.data;
+
+  const summaryHtml = `
+    <div class="rating-summary">
+      ${starsHtml(average)}
+      <span>${average ? average.toFixed(1) + ' / 5' : 'Pas encore noté'}${count ? ` · ${count} avis` : ''}</span>
+    </div>`;
+
+  const listHtml = reviews.length
+    ? reviews.map(rv => `
+        <div class="review-item">
+          <div class="review-head">
+            <span class="review-user">${rv.username}</span>
+            <span class="review-date">${(rv.created_at || '').slice(0, 10)}</span>
+          </div>
+          ${starsHtml(rv.rating)}
+          ${rv.comment ? `<div class="review-comment">${rv.comment}</div>` : ''}
+        </div>`).join('')
+    : '<div class="review-empty">Aucun avis pour l\'instant — sois le premier à en laisser un.</div>';
+
+  const formHtml = TOKEN ? `
+    <div style="margin-top:16px; border-top:1px dashed var(--line); padding-top:14px;">
+      <label>Ta note</label>
+      <div class="star-input" id="starInput"></div>
+      <label>Commentaire (optionnel)</label>
+      <input type="text" id="reviewComment" placeholder="Qu'as-tu pensé de ce lieu ?">
+      <div class="form-error" id="reviewError"></div>
+      <button class="submit-btn" onclick="submitReview(${destId})">Publier mon avis</button>
+    </div>
+  ` : `<div class="review-empty" style="margin-top:12px;">Connecte-toi pour laisser un avis.</div>`;
+
+  container.innerHTML = summaryHtml + `<div style="margin:14px 0;">${listHtml}</div>` + formHtml;
+
+  if (TOKEN) renderStarInput();
+}
+
+function renderStarInput() {
+  selectedRating = 0;
+  const el = document.getElementById('starInput');
+  if (!el) return;
+  el.innerHTML = [1, 2, 3, 4, 5].map(i => `<span data-i="${i}">${ICON.star}</span>`).join('');
+  el.querySelectorAll('span').forEach(span => {
+    span.addEventListener('click', () => {
+      selectedRating = parseInt(span.dataset.i, 10);
+      el.querySelectorAll('.icon').forEach((icon, idx) => {
+        icon.classList.toggle('filled', idx < selectedRating);
+      });
+    });
+  });
+}
+
+async function submitReview(destId) {
+  const errEl = document.getElementById('reviewError');
+  errEl.textContent = '';
+  if (!selectedRating) { errEl.textContent = 'Choisis une note de 1 à 5 étoiles.'; return; }
+  const comment = document.getElementById('reviewComment').value.trim();
+
+  const r = await apiCall('POST', `/destinations/${destId}/reviews`, {
+    auth: true,
+    body: { rating: selectedRating, comment }
+  });
+  if (r && r.status >= 200 && r.status < 300) {
+    toast('Avis publié.');
+    loadReviews(destId);
+  } else {
+    errEl.textContent = (r && r.data && r.data.error) || 'Impossible de publier ton avis.';
+  }
+}
+
+const exploreState = { category: '', tag: '', q: '' };
+let searchDebounce = null;
+
+async function loadExplore() {
   const grid = document.getElementById('exploreGrid');
-  const path = tag ? `/destinations?tag=${encodeURIComponent(tag)}` : '/destinations';
+  const params = new URLSearchParams();
+  if (exploreState.category) params.set('category', exploreState.category);
+  if (exploreState.tag) params.set('tag', exploreState.tag);
+  if (exploreState.q) params.set('q', exploreState.q);
+  const qs = params.toString();
+  const path = qs ? `/destinations?${qs}` : '/destinations';
   const r = await apiCall('GET', path);
   if (r && r.status >= 200 && r.status < 300) {
     if (!r.data.length) {
-      grid.innerHTML = `<div class="empty-state"><strong>Aucun lieu ici</strong>Essaie un autre filtre.</div>`;
+      grid.innerHTML = `<div class="empty-state"><strong>Aucun lieu ici</strong>Essaie un autre filtre ou une autre recherche.</div>`;
     } else {
       grid.innerHTML = r.data.map(d => cardHtml(d)).join('');
     }
@@ -904,12 +1043,31 @@ async function loadExplore(tag) {
   }
 }
 
+function onSearchInput() {
+  clearTimeout(searchDebounce);
+  const value = document.getElementById('exploreSearch').value.trim();
+  searchDebounce = setTimeout(() => {
+    exploreState.q = value;
+    loadExplore();
+  }, 300);
+}
+
+document.getElementById('categoryChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.querySelectorAll('#categoryChips .chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  exploreState.category = chip.dataset.category;
+  loadExplore();
+});
+
 document.getElementById('exploreChips').addEventListener('click', (e) => {
   const chip = e.target.closest('.chip');
   if (!chip) return;
   document.querySelectorAll('#exploreChips .chip').forEach(c => c.classList.remove('active'));
   chip.classList.add('active');
-  loadExplore(chip.dataset.tag);
+  exploreState.tag = chip.dataset.tag;
+  loadExplore();
 });
 
 // Chips de préférences à l'inscription : multi-sélection (contrairement aux chips
@@ -1029,7 +1187,7 @@ async function savePreferences() {
 // ===================== Boot =====================
 window.addEventListener('DOMContentLoaded', () => {
   renderSession();
-  loadExplore('');
+  loadExplore();
   ensureGoogleButton();
 });
 </script>

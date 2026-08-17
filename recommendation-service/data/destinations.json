@@ -30,7 +30,8 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 2,
@@ -62,7 +63,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 3,
@@ -96,7 +98,8 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 4,
@@ -127,7 +130,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 5,
@@ -161,7 +165,8 @@
       "Espèces",
       "Orange Money",
       "MTN Mobile Money"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 6,
@@ -195,7 +200,8 @@
       "Espèces",
       "Orange Money",
       "MTN Mobile Money"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 7,
@@ -227,7 +233,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 8,
@@ -261,7 +268,8 @@
       "Espèces",
       "Orange Money",
       "MTN Mobile Money"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 9,
@@ -288,7 +296,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 10,
@@ -320,7 +329,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 11,
@@ -347,7 +357,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 12,
@@ -374,7 +385,8 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 13,
@@ -409,7 +421,8 @@
       "MTN Mobile Money",
       "Carte bancaire",
       "Espèces"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 15,
@@ -443,7 +456,8 @@
       "Espèces",
       "Orange Money",
       "MTN Mobile Money"
-    ]
+    ],
+    "category": "attraction"
   },
   {
     "id": 15,
@@ -476,6 +490,334 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
+    ],
+    "category": "attraction"
+  },
+  {
+    "id": 16,
+    "name": "Hilton Yaoundé",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "category": "hebergement",
+    "description": "Grand hôtel international au cœur de la ville, piscine, plusieurs restaurants et vue sur Yaoundé — référence pour les voyages d'affaires.",
+    "tags": [
+      "confort",
+      "affaires",
+      "piscine"
+    ],
+    "avg_cost_per_day": 90000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/bxttmhkZXBM",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://www.hilton.com/im/en/YAOHITW/4932233/yaohitw-exterior.tif?impolicy=crop&cw=4288&ch=1800&gravity=NorthWest&xposition=0&yposition=523&rw=1920&rh=806",
+      "photo_note": "Chercher : 'Hilton Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Central, accessible facilement depuis tout le centre-ville"
+      }
+    ],
+    "payment_methods": [
+      "Carte bancaire",
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Djeuga Palace Hôtel",
+    "neighborhood": "Bastos, Yaoundé",
+    "category": "hebergement",
+    "description": "Hôtel de standing proche du Musée d'Art Camerounais et du zoo de Mvog-Betsi, restaurant Le Baobab, piscine extérieure, boîte de nuit.",
+    "tags": [
+      "confort",
+      "affaires",
+      "piscine"
+    ],
+    "avg_cost_per_day": 70000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/Z9qoubMpA6U",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://guestlodgings.com/wp-content/uploads/2023/12/1703172789485-1.png",
+      "photo_note": "Chercher : 'Djeuga Palace Hôtel Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Quartier Bastos, 5 min du centre culturel camerounais"
+      }
+    ],
+    "payment_methods": [
+      "Carte bancaire",
+      "Espèces"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Hôtel La Falaise",
+    "neighborhood": "Centre-ville, Yaoundé",
+    "category": "hebergement",
+    "description": "Hôtel avec piscine intérieure et restaurant, bien situé pour explorer le centre-ville à pied.",
+    "tags": [
+      "confort",
+      "piscine"
+    ],
+    "avg_cost_per_day": 45000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/46374155.jpg?k=c88b7a508d32a97080ebaedc16508f404feea6b35bcb6de6a9692b2238325edd&o=",
+      "photo_note": "Chercher : 'Hotel La Falaise Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "à pied",
+        "notes": "Accessible depuis le centre-ville"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Star Land Hotel Bastos",
+    "neighborhood": "Bastos, Yaoundé",
+    "category": "hebergement",
+    "description": "Hôtel 4 étoiles à Bastos avec piscine extérieure, salle de sport et restaurant — plusieurs adresses de restauration à proximité à pied.",
+    "tags": [
+      "confort",
+      "piscine"
+    ],
+    "avg_cost_per_day": 55000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/345054861.jpg?k=3d989cede5a27bc4fd58e551ff8a7604a3cc5201b3795b6c7f46b42f9d260acd&o=",
+      "photo_note": "Chercher : 'Star Land Hotel Bastos'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Quartier Bastos"
+      }
+    ],
+    "payment_methods": [
+      "Carte bancaire",
+      "Espèces"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Girafe Hôtel",
+    "neighborhood": "Mont Fébé, Yaoundé",
+    "category": "hebergement",
+    "description": "À deux pas du musée bénédictin du Mont Fébé, cadre calme en hauteur avec vue dégagée sur la ville.",
+    "tags": [
+      "confort",
+      "panorama"
+    ],
+    "avg_cost_per_day": 40000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://i.ytimg.com/vi/xl9p-HEejlE/maxresdefault.jpg",
+      "photo_note": "Chercher : 'Girafe Hôtel Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Route du Mont Fébé"
+      }
+    ],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 21,
+    "name": "La Maison Blanche",
+    "neighborhood": "Yaoundé",
+    "category": "restaurant",
+    "description": "Restaurant 100% camerounais, étal de poissons frais à l'entrée à choisir soi-même avant préparation — cuisine locale authentique.",
+    "tags": [
+      "gastronomie",
+      "cuisine locale"
+    ],
+    "avg_cost_per_day": 8000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/bc/1b/a6/competing-vendors.jpg?w=1600&h=900&s=1",
+      "photo_note": "Chercher : 'La Maison Blanche restaurant Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Course courte depuis le centre-ville"
+      }
+    ],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 22,
+    "name": "Les Cigalons",
+    "neighborhood": "Yaoundé",
+    "category": "restaurant",
+    "description": "Restaurant à l'ambiance chaleureuse, réputé pour son hospitalité et sa cuisine mêlant influences locales et internationales.",
+    "tags": [
+      "gastronomie"
+    ],
+    "avg_cost_per_day": 10000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://z-p3-scontent.fnsi2-1.fna.fbcdn.net/v/t39.30808-6/329655206_1545424095946456_5817798547700961834_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x720&ctp=s1080x720&_nc_cat=103&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHo6KiOxuOGZfuCP_ECQXfAIMyYp9_gfbogzJin3-B9uqLGrY_gQYKXgu5rNpuTWPUJqGOnEOrsCHJu66777aHF&_nc_ohc=mg8uZDzP1E8Q7kNvwFrs-Tw&_nc_oc=AdqRWdpOLTny2IvQL-I8RN-EX6ZVrwX4WJ5_vObt_5nqTJd3IdmrCOPvygVRZPUe5b0&_nc_zt=23&_nc_ht=z-p3-scontent.fnsi2-1.fna&_nc_gid=Ne_AWOOlmzUeEHbTVykxgQ&_nc_ss=7b2a8&oh=00_AQEIrS7OmtLVInf1WPhO0TOapJvy7D9UWD6BL8WQC_Lvqw&oe=6A885F33",
+      "photo_note": "Chercher : 'Les Cigalons Yaoundé'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Course courte"
+      }
+    ],
+    "payment_methods": [
+      "Carte bancaire",
+      "Espèces"
+    ]
+  },
+  {
+    "id": 23,
+    "name": "Restaurant Le Baobab (Djeuga Palace)",
+    "neighborhood": "Bastos, Yaoundé",
+    "category": "restaurant",
+    "description": "Restaurant de l'hôtel Djeuga Palace, cuisine locale et internationale, cadre soigné.",
+    "tags": [
+      "gastronomie",
+      "cuisine locale"
+    ],
+    "avg_cost_per_day": 12000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://i.pinimg.com/1200x/05/ca/f3/05caf3141a77eee917b64d610465d8d9.jpg",
+      "photo_note": "Chercher : 'Le Baobab restaurant Djeuga Palace'"
+    },
+    "transport_options": [
+      {
+        "mode": "taxi",
+        "notes": "Quartier Bastos"
+      }
+    ],
+    "payment_methods": [
+      "Carte bancaire",
+      "Espèces"
+    ]
+  },
+  {
+    "id": 24,
+    "name": "Ndolé",
+    "neighborhood": "Disponible dans la plupart des restaurants, Yaoundé",
+    "category": "plat",
+    "description": "Plat national camerounais à base de feuilles de ndolé (légume amer), arachides pilées, viande ou poisson fumé, crevettes.",
+    "tags": [
+      "cuisine locale",
+      "plat"
+    ],
+    "avg_cost_per_day": 2500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://i0.wp.com/camerounactuel.com/wp-content/uploads/2024/05/Ndole-1_jpg2.jpeg?resize=860%2C830&ssl=1",
+      "photo_note": "Chercher : 'Ndolé camerounais'"
+    },
+    "transport_options": [],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 25,
+    "name": "Poulet DG (Directeur Général)",
+    "neighborhood": "Disponible dans la plupart des restaurants, Yaoundé",
+    "category": "plat",
+    "description": "Plat camerounais festif de poulet sauté avec plantain mûr, carottes et légumes — inventé au Cameroun, aujourd'hui incontournable.",
+    "tags": [
+      "cuisine locale",
+      "plat"
+    ],
+    "avg_cost_per_day": 4000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://i.pinimg.com/1200x/ba/7a/e2/ba7ae2e6fc0f44c6c5d08ed2f2edc268.jpg",
+      "photo_note": "Chercher : 'Poulet DG camerounais'"
+    },
+    "transport_options": [],
+    "payment_methods": [
+      "Espèces",
+      "Orange Money"
+    ]
+  },
+  {
+    "id": 26,
+    "name": "Koki",
+    "neighborhood": "Disponible dans la plupart des marchés et restaurants, Yaoundé",
+    "category": "plat",
+    "description": "Gâteau de haricots (niébé ou voandzou) cuit à la vapeur dans des feuilles de bananier, souvent accompagné de bâton de manioc.",
+    "tags": [
+      "cuisine locale",
+      "plat"
+    ],
+    "avg_cost_per_day": 1000,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://www.cuisinedecheznous.net/_next/image/?url=https%3A%2F%2Fwww.cuisinedecheznous.net%2Fwp-content%2Fuploads%2Fsites%2F7%2F2026%2F02%2F1770639557374-recipe-72523-hd.jpg&w=1080&q=75",
+      "photo_note": "Chercher : 'Koki camerounais'"
+    },
+    "transport_options": [],
+    "payment_methods": [
+      "Espèces"
+    ]
+  },
+  {
+    "id": 27,
+    "name": "Bâton de manioc (Bobolo)",
+    "neighborhood": "Disponible dans la plupart des marchés, Yaoundé",
+    "category": "plat",
+    "description": "Pâte de manioc fermentée enveloppée dans des feuilles et cuite à la vapeur — accompagnement traditionnel de la région du Centre.",
+    "tags": [
+      "cuisine locale",
+      "plat"
+    ],
+    "avg_cost_per_day": 500,
+    "media": {
+      "video_embed_url": "https://www.youtube.com/embed/",
+      "media_note": "",
+      "ambient_sound_url": "",
+      "photo_url": "https://i.pinimg.com/736x/dd/c8/06/ddc8068d98eccb1f5762d2ddf2fc7f8f.jpg",
+      "photo_note": "Chercher : 'Bâton de manioc bobolo'"
+    },
+    "transport_options": [],
+    "payment_methods": [
+      "Espèces"
     ]
   }
 ]

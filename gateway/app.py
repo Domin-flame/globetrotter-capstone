@@ -39,9 +39,13 @@ def proxy(service_key, path):
             method=request.method,
             url=target,
             headers=headers,
-            params=request.args,
+            params=request.args.to_dict(flat=False),
             data=request.get_data(),
-            timeout=5,
+            # Sur le plan gratuit de Render, un service endormi peut mettre
+            # 20-50s à se réveiller. Un timeout court renvoie une fausse
+            # erreur "unavailable" au client alors que le service backend
+            # est en réalité en train de démarrer et finit par répondre.
+            timeout=55,
         )
     except requests.RequestException:
         return jsonify({"error": f"{service_key}-service unavailable"}), 503
@@ -60,7 +64,8 @@ def route_request(subpath):
 
 @app.route("/")
 def serve_frontend():
-    return send_from_directory(app.static_folder, "index.html")
+    static_dir = app.static_folder or "static"
+    return send_from_directory(static_dir, "index.html")
 
 
 @app.route("/health")

@@ -11,12 +11,23 @@ User Service to fetch the current user's preferences.
 """
 import os
 import json
+import datetime
 import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 from auth import get_current_user
-from models import get_all_destinations
+from models import (
+    get_all_destinations,
+    get_reviews_for_destination,
+    upsert_review,
+    get_rating_summary,
+    get_all_events,
+    get_events_for_destination,
+    create_event,
+    event_status,
+    has_ongoing_or_upcoming_event,
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +37,15 @@ USER_SERVICE_URL = os.environ.get("USER_SERVICE_URL", "http://localhost:5001")
 ADMIN_USERNAMES = set(
     u.strip() for u in os.environ.get("ADMIN_USERNAMES", "").split(",") if u.strip()
 )
+
+
+def _with_rating(dest):
+    summary = get_rating_summary(dest["id"])
+    entry = dict(dest)
+    entry["rating_avg"] = summary["average"]
+    entry["rating_count"] = summary["count"]
+    entry["has_event"] = has_ongoing_or_upcoming_event(dest["id"])
+    return entry
 
 
 def _require_admin(request_obj):
@@ -49,6 +69,7 @@ def admin_stats():
 def search_destinations():
     q = request.args.get("q", "").strip().lower()
     tag = request.args.get("tag", "").strip().lower()
+    category = request.args.get("category", "").strip().lower()
     neighborhood = request.args.get("neighborhood", "").strip().lower()
     max_cost_str = request.args.get("max_cost", "").strip()
 
@@ -70,6 +91,8 @@ def search_destinations():
                 continue
         if tag and tag not in [t.lower() for t in dest.get("tags", [])]:
             continue
+        if category and category != dest.get("category", "").lower():
+            continue
         if neighborhood and neighborhood not in dest.get("neighborhood", "").lower():
             continue
         if max_cost is not None:
@@ -78,7 +101,7 @@ def search_destinations():
                 continue
         results.append(dest)
 
-    return jsonify(results), 200
+    return jsonify([_with_rating(d) for d in results]), 200
 
 
 @app.route("/recommendations", methods=["GET"])
@@ -88,7 +111,7 @@ def get_recommendations():
         return jsonify({"error": "authentication required"}), 401
 
     try:
-        resp = requests.get(f"{USER_SERVICE_URL}/internal/preferences/{username}", timeout=3)
+        resp = requests.get(f"{USER_SERVICE_URL}/internal/preferences/{username}", timeout=55)
     except requests.RequestException:
         return jsonify({"error": "user-service unavailable"}), 503
 
@@ -115,11 +138,96 @@ def get_recommendations():
 
     results = []
     for score, dest in scored[:limit]:
-        entry = dict(dest)
+        entry = _with_rating(dest)
         entry["match_score"] = score
         results.append(entry)
 
     return jsonify(results), 200
+
+
+@app.route("/destinations/<int:dest_id>/reviews", methods=["GET"])
+def list_reviews(dest_id):
+    if not any(d["id"] == dest_id for d in get_all_destinations()):
+        return jsonify({"error": "destination not found"}), 404
+
+    reviews = sorted(
+        get_reviews_for_destination(dest_id),
+        key=lambda r: r.get("created_at", ""),
+        reverse=True,
+    )
+    summary = get_rating_summary(dest_id)
+    return jsonify({"reviews": reviews, "average": summary["average"], "count": summary["count"]}), 200
+
+
+@app.route("/destinations/<int:dest_id>/reviews", methods=["POST"])
+def create_review(dest_id):
+    username = get_current_user(request)
+    if not username:
+        return jsonify({"error": "authentication required"}), 401
+
+    if not any(d["id"] == dest_id for d in get_all_destinations()):
+        return jsonify({"error": "destination not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+    rating = data.get("rating")
+    comment = (data.get("comment") or "").strip()
+
+    if not isinstance(rating, int) or rating < 1 or rating > 5:
+        return jsonify({"error": "rating must be a whole number between 1 and 5"}), 400
+    if len(comment) > 500:
+        return jsonify({"error": "comment must be 500 characters or fewer"}), 400
+
+    review = upsert_review(dest_id, username, rating, comment)
+    summary = get_rating_summary(dest_id)
+    return jsonify({"review": review, "average": summary["average"], "count": summary["count"]}), 201
+
+
+@app.route("/destinations/<int:dest_id>/events", methods=["GET"])
+def list_events(dest_id):
+    if not any(d["id"] == dest_id for d in get_all_destinations()):
+        return jsonify({"error": "destination not found"}), 404
+
+    events = get_events_for_destination(dest_id)
+    enriched = [dict(e, status=event_status(e)) for e in events]
+    # à venir puis en cours en premier, terminés à la fin
+    order = {"ongoing": 0, "upcoming": 1, "past": 2}
+    enriched.sort(key=lambda e: (order[e["status"]], e["start_date"]))
+    return jsonify({"events": enriched}), 200
+
+
+@app.route("/destinations/<int:dest_id>/events", methods=["POST"])
+def add_event(dest_id):
+    username = get_current_user(request)
+    if not username:
+        return jsonify({"error": "authentication required"}), 401
+
+    if not any(d["id"] == dest_id for d in get_all_destinations()):
+        return jsonify({"error": "destination not found"}), 404
+
+    data = request.get_json(silent=True) or {}
+    title = (data.get("title") or "").strip()
+    description = (data.get("description") or "").strip()
+    start_date = (data.get("start_date") or "").strip()
+    end_date = (data.get("end_date") or "").strip()
+
+    if not title:
+        return jsonify({"error": "title is required"}), 400
+    if len(title) > 120:
+        return jsonify({"error": "title must be 120 characters or fewer"}), 400
+    if len(description) > 500:
+        return jsonify({"error": "description must be 500 characters or fewer"}), 400
+
+    try:
+        start_dt = datetime.date.fromisoformat(start_date)
+        end_dt = datetime.date.fromisoformat(end_date)
+    except ValueError:
+        return jsonify({"error": "start_date and end_date must be valid dates (YYYY-MM-DD)"}), 400
+
+    if end_dt < start_dt:
+        return jsonify({"error": "end_date must be on or after start_date"}), 400
+
+    event = create_event(dest_id, username, title, description, start_date, end_date)
+    return jsonify({"event": dict(event, status=event_status(event))}), 201
 
 
 @app.route("/health", methods=["GET"])
