@@ -14,6 +14,18 @@ from flask import Flask, request, jsonify, send_from_directory, Response
 
 app = Flask(__name__, static_folder="static")
 
+
+@app.after_request
+def allow_google_signin_popup(response):
+    # Sans cet en-tête explicite, certains navigateurs (Edge/Chrome récents)
+    # appliquent une politique COOP par défaut qui bloque le postMessage
+    # utilisé par "Sign in with Google" pour renvoyer le jeton au popup —
+    # l'utilisateur clique, Google répond, mais le navigateur jette la
+    # réponse avant qu'elle n'atteigne notre JS. "same-origin-allow-popups"
+    # garde l'isolation d'origine tout en autorisant ce cas précis.
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
+    return response
+
 SERVICES = {
     "user": os.environ.get("USER_SERVICE_URL", "http://localhost:5001"),
     "itinerary": os.environ.get("ITINERARY_SERVICE_URL", "http://localhost:5002"),
