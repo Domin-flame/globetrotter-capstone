@@ -267,6 +267,23 @@
 
   /* ===== Auth panel ===== */
   .auth-panel { max-width: 420px; margin: 0 auto; background: var(--paper); border: 1px solid var(--ink); border-radius: 8px; box-shadow: 4px 4px 0 rgba(28,43,58,0.1); overflow: hidden; }
+  .auth-panel { max-width: 960px; min-height: 560px; display: grid; grid-template-columns: .95fr 1.05fr; border: 0; border-radius: 2px; box-shadow: 0 20px 42px rgba(52,35,17,.16); background: #f3eadf; overflow: hidden; }
+  .auth-art { position: relative; min-height: 560px; padding: 48px 38px; display: flex; align-items: center; justify-content: center; color: #f7ede2; background-color: #5c3a16; background-image: radial-gradient(ellipse at 20% 20%, transparent 0 10px, #b22c1f 11px 19px, #2d7d2c 20px 24px, transparent 25px), radial-gradient(ellipse at 74% 74%, transparent 0 11px, #b22c1f 12px 20px, #2d7d2c 21px 25px, transparent 26px); background-size: 112px 112px, 128px 128px; }
+  .auth-art::after { content: ''; position: absolute; inset: 0; opacity: .34; background: radial-gradient(ellipse at 30% 25%, #16100a 0 3px, transparent 4px), radial-gradient(ellipse at 72% 65%, #16100a 0 4px, transparent 5px); background-size: 54px 46px, 68px 58px; mix-blend-mode: multiply; pointer-events: none; }
+  .auth-art-inner { position: relative; z-index: 1; max-width: 300px; min-height: 390px; padding: 40px 30px; border-radius: 48% 48% 42% 42%; background: #f3eadf; color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 10px 18px rgba(35,20,8,.15); }
+  .auth-art-mark { width: 116px; height: 116px; border-radius: 50%; display: grid; place-items: center; background: #f67d2b; font-size: 62px; margin-bottom: 24px; }
+  .auth-art-title { font-family: var(--serif); font-size: 30px; line-height: 1.02; font-style: italic; }
+  .auth-form-side { padding: 58px clamp(30px, 6vw, 82px); display: flex; flex-direction: column; justify-content: center; }
+  .auth-form-side .auth-switch { order: -1; margin-bottom: 30px; max-width: 300px; }
+  .auth-form-side .auth-switch button { background: transparent; padding: 8px 0; text-align: left; margin-right: 24px; border-bottom-color: transparent; }
+  .auth-form-side .auth-switch button.active { background: transparent; color: var(--postmark); border-bottom-color: var(--postmark); }
+  .auth-form-side .auth-body { padding: 0; max-width: 360px; }
+  .auth-form-side .auth-body::before { content: 'SIGN IN'; display: block; font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 22px; }
+  .auth-form-side input[type=text], .auth-form-side input[type=password] { border: 1px solid rgba(92,58,22,.35); border-radius: 0; background: rgba(255,255,255,.18); padding: 15px 14px; }
+  .auth-form-side .submit-btn { background: #a52b24; border-radius: 0; padding: 15px; }
+  .auth-form-side .auth-divider, .auth-form-side .auth-social { max-width: 360px; padding-left: 0; padding-right: 0; }
+  .auth-form-side .auth-social { padding-bottom: 0; }
+  @media (max-width: 720px) { .auth-panel { grid-template-columns: 1fr; } .auth-art { min-height: 250px; padding: 24px; } .auth-art-inner { min-height: 220px; padding: 22px; } .auth-art-mark { width: 72px; height: 72px; font-size: 38px; margin-bottom: 12px; } .auth-art-title { font-size: 24px; } .auth-form-side { padding: 34px 24px; } }
   .auth-divider { display: flex; align-items: center; gap: 12px; padding: 0 24px; color: var(--ink-soft); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; }
   .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
   .auth-social { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 10px; }
@@ -617,7 +634,7 @@
     <a class="drawer-link" onclick="closeMobileNav(); showView('explore');" data-i18n="explorePlaces">Lieux à Yaoundé</a>
     <a class="drawer-link" onclick="closeMobileNav(); showView('recommendations');" data-i18n="recommendations">Recommandations</a>
     <a class="drawer-link" onclick="closeMobileNav(); showView('itineraries');" data-i18n="myTrips">Mes itinéraires</a>
-    <a class="drawer-link" onclick="closeMobileNav(); showView('chat');">Chat communautaire</a>
+    <a class="drawer-link" onclick="closeMobileNav(); showView('chat');" data-i18n="communityChat">Chat communautaire</a>
 
     <div class="drawer-divider"></div>
 
@@ -643,38 +660,38 @@
       <h1 data-i18n="heroTitle">Yaoundé, quartier par quartier</h1>
       <div class="hero-sub" data-i18n="heroSubtitle">Musées, marchés, collines et lieux de culte — un carnet de voyage pensé pour découvrir la capitale à pied, une adresse à la fois.</div>
       <div class="hero-cta" id="heroCta">
-        <button class="btn btn-primary" onclick="showView('explore')" data-i18n="startExploring">Commencer à explorer</button>
+        <button class="btn btn-primary" onclick="startExploring()" data-i18n="startExploring">Commencer à explorer</button>
       </div>
     </div>
 
     <div class="history-section">
-      <div class="history-eyebrow">UN PEU D'HISTOIRE</div>
+      <div class="history-eyebrow" data-i18n="historyEyebrow">UN PEU D'HISTOIRE</div>
       <h2 data-i18n="historyTitle">Yaoundé, des origines à la capitale</h2>
-      <p>Fondée à la fin du XIXᵉ siècle sur les collines habitées par les peuples Ewondo et Bane, Yaoundé fut d'abord un poste allemand avant de devenir, sous administration française, la capitale politique du Cameroun indépendant en 1960. Bâtie sur sept collines, elle mêle aujourd'hui institutions nationales, marchés animés et quartiers résidentiels verdoyants — un carrefour où se croisent les cultures de tout le pays.</p>
+      <p data-i18n="historyBody">Fondée à la fin du XIXᵉ siècle sur les collines habitées par les peuples Ewondo et Bane, Yaoundé fut d'abord un poste allemand avant de devenir, sous administration française, la capitale politique du Cameroun indépendant en 1960. Bâtie sur sept collines, elle mêle aujourd'hui institutions nationales, marchés animés et quartiers résidentiels verdoyants — un carrefour où se croisent les cultures de tout le pays.</p>
     </div>
 
     <section class="city-story" aria-labelledby="city-story-title">
       <div class="city-story-copy">
-        <div class="eyebrow">L'ESPRIT DE YAOUNDÉ</div>
-        <h2 id="city-story-title">Une capitale à vivre, pas seulement à visiter.</h2>
-        <p>Entre les hauteurs de Fébé, les marchés du centre et les tables de Bastos, Yaoundé se découvre par ses quartiers et ses habitudes. Dzula rassemble les lieux qui donnent son rythme à la ville.</p>
-        <p>Commence par une promenade, trouve une adresse locale, puis construis ton propre itinéraire au fil des rencontres.</p>
+        <div class="eyebrow" data-i18n="citySpirit">L'ESPRIT DE YAOUNDÉ</div>
+        <h2 id="city-story-title" data-i18n="cityStoryTitle">Une capitale à vivre, pas seulement à visiter.</h2>
+        <p data-i18n="cityStoryBody">Entre les hauteurs de Fébé, les marchés du centre et les tables de Bastos, Yaoundé se découvre par ses quartiers et ses habitudes. Dzula rassemble les lieux qui donnent son rythme à la ville.</p>
+        <p data-i18n="cityStoryCta">Commence par une promenade, trouve une adresse locale, puis construis ton propre itinéraire au fil des rencontres.</p>
       </div>
       <div class="city-story-image"><img src="/yaounde-hero.jpg" alt="Paysage urbain de Yaoundé"></div>
     </section>
 
     <div class="guide-strip" aria-label="Explorer Yaoundé par thème">
-      <button class="guide-link" onclick="scrollToCategory('attraction')"><strong>À voir</strong><span>Musées, marchés, collines</span></button>
-      <button class="guide-link" onclick="scrollToCategory('hebergement')"><strong>Dormir</strong><span>Hôtels et adresses pratiques</span></button>
-      <button class="guide-link" onclick="scrollToCategory('restaurant')"><strong>Manger</strong><span>Tables camerounaises</span></button>
-      <button class="guide-link" onclick="scrollToCategory('plat')"><strong>Goûter</strong><span>Les saveurs du Centre</span></button>
+      <button class="guide-link" onclick="scrollToCategory('attraction')"><strong data-i18n="see">À voir</strong><span data-i18n="seeDesc">Musées, marchés, collines</span></button>
+      <button class="guide-link" onclick="scrollToCategory('hebergement')"><strong data-i18n="stay">Dormir</strong><span data-i18n="stayDesc">Hôtels et adresses pratiques</span></button>
+      <button class="guide-link" onclick="scrollToCategory('restaurant')"><strong data-i18n="eat">Manger</strong><span data-i18n="eatDesc">Tables camerounaises</span></button>
+      <button class="guide-link" onclick="scrollToCategory('plat')"><strong data-i18n="taste">Goûter</strong><span data-i18n="tasteDesc">Les saveurs du Centre</span></button>
     </div>
 
     <div class="section-head">
       <h2 data-i18n="catalogTitle">Le carnet de Yaoundé</h2>
     </div>
 
-    <input type="text" id="exploreSearch" placeholder="Rechercher un lieu, un plat, un quartier…" oninput="onSearchInput()"
+    <input type="text" id="exploreSearch" data-i18n-placeholder="searchPlaceholder" placeholder="Rechercher un lieu, un plat, un quartier…" oninput="onSearchInput()"
       style="width:100%; max-width:420px; font-family:var(--sans); font-size:13.5px; padding:10px 14px; border:1px solid var(--ink); border-radius:20px; background:var(--paper); color:var(--ink); margin-bottom:14px;">
 
     <div id="searchResultsSection" style="display:none;">
@@ -689,8 +706,8 @@
     <p class="section-sub" style="display:block; margin:-6px 0 18px; font-family:var(--sans); font-size:15px;" data-i18n="mapSubtitle">Trouvez les lieux, hôtels, restaurants et saveurs qui vous intéressent.</p>
     <div class="map-panel">
       <div class="map-toolbar">
-        <input id="mapSearch" type="search" placeholder="Rechercher un lieu…" oninput="filterMapMarkers()">
-        <select id="mapCategory" onchange="filterMapMarkers()"><option value="">Toutes les catégories</option><option value="attraction">À voir</option><option value="hebergement">Dormir</option><option value="restaurant">Manger</option><option value="plat">Goûter</option></select>
+        <input id="mapSearch" type="search" data-i18n-placeholder="mapSearchPlaceholder" placeholder="Rechercher un lieu…" oninput="filterMapMarkers()">
+        <select id="mapCategory" onchange="filterMapMarkers()"><option value="" data-i18n="allCategories">Toutes les catégories</option><option value="attraction" data-i18n="see">À voir</option><option value="hebergement" data-i18n="stay">Dormir</option><option value="restaurant" data-i18n="eat">Manger</option><option value="plat" data-i18n="taste">Goûter</option></select>
         <button class="btn btn-primary" onclick="resetMapView()" data-i18n="centerMap">Centrer sur Yaoundé</button>
       </div>
       <div id="yaoundeMap" aria-label="Carte interactive de Yaoundé"></div>
@@ -700,19 +717,26 @@
   <!-- ===================== AUTH ===================== -->
   <section class="view" id="view-auth">
     <div class="auth-panel">
-      <div class="auth-switch">
-        <button class="active" id="switchLogin" onclick="setAuthMode('login')">Connexion</button>
-        <button id="switchRegister" onclick="setAuthMode('register')">Inscription</button>
+      <div class="auth-art">
+        <div class="auth-art-inner">
+          <div class="auth-art-mark" aria-hidden="true">✦</div>
+          <div class="auth-art-title" data-i18n="authArtTitle">Votre carnet de Yaoundé</div>
+        </div>
       </div>
-      <div class="auth-body">
+      <div class="auth-form-side">
+        <div class="auth-switch">
+          <button class="active" id="switchLogin" onclick="setAuthMode('login')" data-i18n="login">Connexion</button>
+          <button id="switchRegister" onclick="setAuthMode('register')" data-i18n="register">Inscription</button>
+        </div>
+        <div class="auth-body">
 
         <form id="loginForm" onsubmit="return false;">
-          <label>Nom d'utilisateur</label>
+          <label data-i18n="username">Nom d'utilisateur</label>
           <input type="text" id="login-username" autocomplete="username">
-          <label>Mot de passe</label>
+          <label data-i18n="password">Mot de passe</label>
           <input type="password" id="login-password" autocomplete="current-password">
           <div class="form-error" id="loginError"></div>
-          <button class="submit-btn" onclick="doLogin()">Se connecter</button>
+          <button class="submit-btn" onclick="doLogin()" data-i18n="login">Se connecter</button>
         </form>
 
         <form id="registerForm" style="display:none;" onsubmit="return false;">
@@ -730,40 +754,39 @@
             <span class="chip" data-tag="histoire">Histoire</span>
           </div>
           <div class="form-error" id="registerError"></div>
-          <button class="submit-btn" onclick="doRegister()">Créer mon compte</button>
+          <button class="submit-btn" onclick="doRegister()" data-i18n="createAccount">Créer mon compte</button>
         </form>
 
-      </div>
+        </div>
 
-      <div class="auth-divider"><span>ou</span></div>
-      <div class="auth-social">
-        <div id="googleBtnContainer" class="google-btn-wrap"></div>
-        <button class="btn-social-placeholder" disabled title="Bientôt disponible">
-          Continuer avec Facebook
-        </button>
-      </div>
+        <div class="auth-divider"><span data-i18n="or">ou</span></div>
+        <div class="auth-social">
+          <div id="googleBtnContainer" class="google-btn-wrap"></div>
+          <button class="btn-social-placeholder" disabled title="Bientôt disponible" data-i18n="facebookSoon">Continuer avec Facebook</button>
+        </div>
 
+      </div>
     </div>
   </section>
 
   <!-- ===================== RECOMMENDATIONS ===================== -->
   <section class="view" id="view-recommendations">
     <div class="section-head">
-      <h2>Recommandé pour toi</h2>
+      <h2 data-i18n="recommendedTitle">Recommandé pour toi</h2>
     </div>
     <div class="grid-cards" id="recoGrid">
-      <div class="empty-state"><strong>Pas encore de recommandations</strong>Connecte-toi pour voir les lieux qui correspondent à tes centres d'intérêt.</div>
+      <div class="empty-state"><strong data-i18n="noRecommendations">Pas encore de recommandations</strong><span data-i18n="loginForRecommendations">Connecte-toi pour voir les lieux qui correspondent à tes centres d'intérêt.</span></div>
     </div>
   </section>
 
   <!-- ===================== ITINERARIES ===================== -->
   <section class="view" id="view-itineraries">
     <div class="section-head">
-      <h2>Mes itinéraires</h2>
-      <button class="btn btn-ghost new-itin-toggle" style="color:var(--ink); border-color:var(--ink);" onclick="toggleNewItin()">+ Nouvel itinéraire</button>
+      <h2 data-i18n="myTrips">Mes itinéraires</h2>
+      <button class="btn btn-ghost new-itin-toggle" style="color:var(--ink); border-color:var(--ink);" onclick="toggleNewItin()" data-i18n="newTrip">+ Nouvel itinéraire</button>
     </div>
     <div class="itin-list" id="itinList">
-      <div class="empty-state"><strong>Aucun itinéraire pour l'instant</strong>Crée ton premier itinéraire avec le bouton ci-dessus.</div>
+      <div class="empty-state"><strong data-i18n="noTrips">Aucun itinéraire pour l'instant</strong><span data-i18n="createFirstTrip">Crée ton premier itinéraire avec le bouton ci-dessus.</span></div>
     </div>
     <div class="new-itin-form" id="newItinForm">
       <label>Titre</label>
@@ -788,7 +811,7 @@
   <!-- ===================== CHAT (salon communautaire) ===================== -->
   <section class="view" id="view-chat">
     <div class="section-head">
-      <h2>Chat communautaire</h2>
+      <h2 data-i18n="communityChat">Chat communautaire</h2>
       <span id="chatStatus" class="chat-status">Connexion…</span>
     </div>
     <div class="chat-layout">
@@ -799,7 +822,7 @@
           <div class="chat-compose-row">
             <input type="file" id="chatFile" accept="image/jpeg,image/png,image/webp,audio/mpeg,audio/wav,audio/ogg,audio/mp4" hidden onchange="selectChatAttachment(event)">
             <button class="chat-attach" onclick="document.getElementById('chatFile').click()" aria-label="Ajouter une image ou un audio" title="Ajouter une image ou un audio">+</button>
-            <input type="text" id="chatInput" placeholder="Écris un message ou partage une image…" maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage();">
+            <input type="text" id="chatInput" data-i18n-placeholder="chatPlaceholder" placeholder="Écris un message ou partage une image…" maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage();">
             <button class="btn btn-primary" onclick="sendChatMessage()" data-i18n="send">Envoyer</button>
           </div>
         </div>
@@ -863,11 +886,11 @@
   <!-- ===================== À PROPOS ===================== -->
   <section class="view" id="view-about">
     <div class="history-section" style="text-align:left; max-width:640px; margin:0;">
-      <div class="history-eyebrow">À PROPOS</div>
-      <h2>Dzula</h2>
-      <p style="font-style:italic; margin-bottom:18px;">« Dzula » — voyage, exploration.</p>
-      <p>Dzula est un guide local pour découvrir Yaoundé autrement : attractions, hébergements, restaurants et plats typiques, avec avis, événements et un salon communautaire pour échanger entre voyageurs.</p>
-      <p>Projet étudiant réalisé dans le cadre du cours CS4122 — Distributed Systems and Cloud Computing, ICT University.</p>
+      <div class="history-eyebrow" data-i18n="aboutEyebrow">À PROPOS</div>
+      <h2 data-i18n="aboutTitle">Dzula</h2>
+      <p style="font-style:italic; margin-bottom:18px;" data-i18n="aboutTagline">« Dzula » — voyage, exploration.</p>
+      <p data-i18n="aboutBody">Dzula est un guide local pour découvrir Yaoundé autrement : attractions, hébergements, restaurants et plats typiques, avec avis, événements et un salon communautaire pour échanger entre voyageurs.</p>
+      <p data-i18n="aboutProject">Projet étudiant réalisé dans le cadre du cours CS4122 — Distributed Systems and Cloud Computing, ICT University.</p>
     </div>
   </section>
 
@@ -888,18 +911,18 @@
     </div>
 
     <div class="footer-faq">
-      <h4>Questions fréquentes</h4>
+      <h4 data-i18n="faqTitle">Questions fréquentes</h4>
       <details>
-        <summary>Comment fonctionnent les recommandations ?</summary>
-        <p>On croise les centres d'intérêt choisis dans ton compte avec les tags de chaque destination pour te proposer les lieux les plus pertinents.</p>
+        <summary data-i18n="faqReco">Comment fonctionnent les recommandations ?</summary>
+        <p data-i18n="faqRecoBody">On croise les centres d'intérêt choisis dans ton compte avec les tags de chaque destination pour te proposer les lieux les plus pertinents.</p>
       </details>
       <details>
-        <summary>Mes données sont-elles partagées ?</summary>
-        <p>Non. Tes centres d'intérêt et tes itinéraires ne servent qu'à te faire des recommandations personnalisées.</p>
+        <summary data-i18n="faqData">Mes données sont-elles partagées ?</summary>
+        <p data-i18n="faqDataBody">Non. Tes centres d'intérêt et tes itinéraires ne servent qu'à te faire des recommandations personnalisées.</p>
       </details>
       <details>
-        <summary>Puis-je proposer un lieu qui manque ?</summary>
-        <p>Oui — écris-nous, on complète régulièrement la liste avec les retours de la communauté.</p>
+        <summary data-i18n="faqSuggest">Puis-je proposer un lieu qui manque ?</summary>
+        <p data-i18n="faqSuggestBody">Oui — écris-nous, on complète régulièrement la liste avec les retours de la communauté.</p>
       </details>
     </div>
   </div>
@@ -924,18 +947,24 @@ let LANGUAGE = localStorage.getItem('gt_language') || 'fr';
 
 const TRANSLATIONS = {
   fr: {
-    explore: 'Explorer', recommendations: 'Recommandations', myTrips: 'Mes itinéraires', messages: 'Messages', dashboard: 'Tableau de bord',
-    explorePlaces: 'Lieux à Yaoundé', favorites: 'Mes favoris', about: 'À propos de Dzula', logout: 'Se déconnecter',
-    heroEyebrow: 'GUIDE LOCAL · SEPT COLLINES', heroTitle: 'Yaoundé, quartier par quartier', heroSubtitle: 'Musées, marchés, collines et lieux de culte — un carnet de voyage pensé pour découvrir la capitale à pied, une adresse à la fois.', startExploring: 'Commencer à explorer', map: 'Carte', mapTitle: 'Explorer Yaoundé sur la carte', mapSubtitle: 'Trouvez les lieux, hôtels, restaurants et saveurs qui vous intéressent.', centerMap: 'Centrer sur Yaoundé', send: 'Envoyer', chatTitle: 'Le salon de Yaoundé', chatIntro: 'Partagez une adresse, demandez conseil ou racontez votre dernière découverte.', chatPresence: 'Salon communautaire',
-    historyTitle: 'Yaoundé, des origines à la capitale', catalogTitle: 'Le carnet de Yaoundé', yourSpace: 'VOTRE ESPACE', welcome: 'Bienvenue', dashboardIntro: 'Retrouvez vos inspirations, vos itinéraires et vos lieux favoris au même endroit.', discoverForYou: 'Découvrir pour vous', discoverForYouDesc: "Des idées choisies selon vos centres d'intérêt.", planTrip: 'Planifier un voyage', planTripDesc: 'Créez un itinéraire pour votre prochaine escapade.', savedPlaces: 'Lieux sauvegardés', savedPlacesDesc: 'Gardez vos adresses préférées sous la main.', preferences: 'Vos préférences', interests: "Centres d'intérêt", savedTrips: 'Itinéraires enregistrés', editInterests: "Modifier mes centres d'intérêt", save: 'Enregistrer'
+    explore: 'Explorer', map: 'Carte', recommendations: 'Recommandations', myTrips: 'Mes itinéraires', messages: 'Messages', dashboard: 'Tableau de bord', explorePlaces: 'Lieux à Yaoundé', favorites: 'Mes favoris', about: 'À propos de Dzula', logout: 'Se déconnecter', communityChat: 'Chat communautaire', attractions: 'Attractions', accommodation: 'Hébergements', restaurants: 'Restaurants', localDishes: 'Plats locaux',
+    heroEyebrow: 'GUIDE LOCAL · SEPT COLLINES', heroTitle: 'Yaoundé, quartier par quartier', heroSubtitle: 'Musées, marchés, collines et lieux de culte — un carnet de voyage pensé pour découvrir la capitale à pied, une adresse à la fois.', startExploring: 'Commencer à explorer', historyEyebrow: "UN PEU D'HISTOIRE", historyTitle: 'Yaoundé, des origines à la capitale', historyBody: "Fondée à la fin du XIXᵉ siècle sur les collines habitées par les peuples Ewondo et Bane, Yaoundé fut d'abord un poste allemand avant de devenir, sous administration française, la capitale politique du Cameroun indépendant en 1960. Bâtie sur sept collines, elle mêle aujourd'hui institutions nationales, marchés animés et quartiers résidentiels verdoyants — un carrefour où se croisent les cultures de tout le pays.", citySpirit: "L'ESPRIT DE YAOUNDÉ", cityStoryTitle: 'Une capitale à vivre, pas seulement à visiter.', cityStoryBody: 'Entre les hauteurs de Fébé, les marchés du centre et les tables de Bastos, Yaoundé se découvre par ses quartiers et ses habitudes. Dzula rassemble les lieux qui donnent son rythme à la ville.', cityStoryCta: 'Commence par une promenade, trouve une adresse locale, puis construis ton propre itinéraire au fil des rencontres.', see: 'À voir', seeDesc: 'Musées, marchés, collines', stay: 'Dormir', stayDesc: 'Hôtels et adresses pratiques', eat: 'Manger', eatDesc: 'Tables camerounaises', taste: 'Goûter', tasteDesc: 'Les saveurs du Centre', catalogTitle: 'Le carnet de Yaoundé', searchPlaceholder: 'Rechercher un lieu, un plat, un quartier…',
+    mapTitle: 'Explorer Yaoundé sur la carte', mapSubtitle: 'Trouvez les lieux, hôtels, restaurants et saveurs qui vous intéressent.', mapSearchPlaceholder: 'Rechercher un lieu…', allCategories: 'Toutes les catégories', centerMap: 'Centrer sur Yaoundé', send: 'Envoyer', chatTitle: 'Le salon de Yaoundé', chatIntro: 'Partagez une adresse, demandez conseil ou racontez votre dernière découverte.', chatPresence: 'Salon communautaire', chatPlaceholder: 'Écris un message ou partage une image…', login: 'Connexion', register: 'Inscription', username: "Nom d'utilisateur", password: 'Mot de passe', createAccount: 'Créer mon compte', recommendedTitle: 'Recommandé pour toi', noRecommendations: 'Pas encore de recommandations', loginForRecommendations: "Connecte-toi pour voir les lieux qui correspondent à tes centres d'intérêt.", newTrip: '+ Nouvel itinéraire', noTrips: "Aucun itinéraire pour l'instant", createFirstTrip: 'Crée ton premier itinéraire avec le bouton ci-dessus.',
+    yourSpace: 'VOTRE ESPACE', welcome: 'Bienvenue', dashboardIntro: 'Retrouvez vos inspirations, vos itinéraires et vos lieux favoris au même endroit.', discoverForYou: 'Découvrir pour vous', discoverForYouDesc: "Des idées choisies selon vos centres d'intérêt.", planTrip: 'Planifier un voyage', planTripDesc: 'Créez un itinéraire pour votre prochaine escapade.', savedPlaces: 'Lieux sauvegardés', savedPlacesDesc: 'Gardez vos adresses préférées sous la main.', preferences: 'Vos préférences', interests: "Centres d'intérêt", savedTrips: 'Itinéraires enregistrés', editInterests: "Modifier mes centres d'intérêt", save: 'Enregistrer', aboutEyebrow: 'À PROPOS', aboutTitle: 'Dzula', aboutTagline: '« Dzula » — voyage, exploration.', aboutBody: 'Dzula est un guide local pour découvrir Yaoundé autrement : attractions, hébergements, restaurants et plats typiques, avec avis, événements et un salon communautaire pour échanger entre voyageurs.', aboutProject: 'Projet étudiant réalisé dans le cadre du cours CS4122 — Distributed Systems and Cloud Computing, ICT University.', faqTitle: 'Questions fréquentes', faqReco: 'Comment fonctionnent les recommandations ?', faqRecoBody: "On croise les centres d'intérêt choisis dans ton compte avec les tags de chaque destination pour te proposer les lieux les plus pertinents.", faqData: 'Mes données sont-elles partagées ?', faqDataBody: "Non. Tes centres d'intérêt et tes itinéraires ne servent qu'à te faire des recommandations personnalisées.", faqSuggest: 'Puis-je proposer un lieu qui manque ?', faqSuggestBody: "Oui — écris-nous, on complète régulièrement la liste avec les retours de la communauté."
   },
   en: {
-    explore: 'Explore', recommendations: 'For you', myTrips: 'My trips', messages: 'Messages', dashboard: 'Dashboard',
-    explorePlaces: 'Places in Yaoundé', favorites: 'Saved places', about: 'About Dzula', logout: 'Log out',
-    heroEyebrow: 'LOCAL GUIDE · SEVEN HILLS', heroTitle: 'Yaoundé, one neighbourhood at a time', heroSubtitle: 'Museums, markets, hills and places of worship — a travel notebook for discovering the capital on foot, one address at a time.', startExploring: 'Start exploring', map: 'Map', mapTitle: 'Explore Yaoundé on the map', mapSubtitle: 'Find places, hotels, restaurants and local flavours that interest you.', centerMap: 'Center on Yaoundé', send: 'Send', chatTitle: 'The Yaoundé room', chatIntro: 'Share an address, ask for advice or tell us about your latest discovery.', chatPresence: 'Community room',
-    historyTitle: 'Yaoundé, from origins to capital', catalogTitle: 'The Yaoundé notebook', yourSpace: 'YOUR SPACE', welcome: 'Welcome', dashboardIntro: 'Find your inspiration, itineraries and saved places in one place.', discoverForYou: 'Discover for you', discoverForYouDesc: 'Ideas selected around your interests.', planTrip: 'Plan a trip', planTripDesc: 'Create an itinerary for your next escape.', savedPlaces: 'Saved places', savedPlacesDesc: 'Keep your favourite addresses close at hand.', preferences: 'Your preferences', interests: 'Interests', savedTrips: 'Saved itineraries', editInterests: 'Edit your interests', save: 'Save'
+    explore: 'Explore', map: 'Map', recommendations: 'For you', myTrips: 'My trips', messages: 'Messages', dashboard: 'Dashboard', explorePlaces: 'Places in Yaoundé', favorites: 'Saved places', about: 'About Dzula', logout: 'Log out', communityChat: 'Community chat', attractions: 'Attractions', accommodation: 'Accommodation', restaurants: 'Restaurants', localDishes: 'Local dishes', heroEyebrow: 'LOCAL GUIDE · SEVEN HILLS', heroTitle: 'Yaoundé, one neighbourhood at a time', heroSubtitle: 'Museums, markets, hills and places of worship — a travel notebook for discovering the capital on foot, one address at a time.', startExploring: 'Start exploring', historyEyebrow: 'A LITTLE HISTORY', historyTitle: 'Yaoundé, from origins to capital', historyBody: 'Founded in the late nineteenth century on hills inhabited by the Ewondo and Bane peoples, Yaoundé became the political capital of independent Cameroon in 1960. Built on seven hills, it brings together national institutions, lively markets and green neighbourhoods.', citySpirit: 'THE SPIRIT OF YAOUNDÉ', cityStoryTitle: 'A capital to experience, not just visit.', cityStoryBody: 'From the heights of Fébé to the central markets and Bastos tables, Yaoundé is discovered through its neighbourhoods and daily rhythms. Dzula brings together the places that give the city its character.', cityStoryCta: 'Start with a walk, find a local address, then build your own itinerary as you go.', see: 'See', seeDesc: 'Museums, markets, hills', stay: 'Stay', stayDesc: 'Hotels and practical addresses', eat: 'Eat', eatDesc: 'Cameroonian tables', taste: 'Taste', tasteDesc: 'Flavours of the Centre', catalogTitle: 'The Yaoundé notebook', searchPlaceholder: 'Search for a place, dish or neighbourhood…', mapTitle: 'Explore Yaoundé on the map', mapSubtitle: 'Find places, hotels, restaurants and local flavours that interest you.', mapSearchPlaceholder: 'Search for a place…', allCategories: 'All categories', centerMap: 'Center on Yaoundé', send: 'Send', chatTitle: 'The Yaoundé room', chatIntro: 'Share an address, ask for advice or tell us about your latest discovery.', chatPresence: 'Community room', chatPlaceholder: 'Write a message or share an image…', login: 'Log in', register: 'Sign up', username: 'Username', password: 'Password', createAccount: 'Create my account', recommendedTitle: 'Recommended for you', noRecommendations: 'No recommendations yet', loginForRecommendations: 'Log in to see places matching your interests.', newTrip: '+ New itinerary', noTrips: 'No itineraries yet', createFirstTrip: 'Create your first itinerary with the button above.', yourSpace: 'YOUR SPACE', welcome: 'Welcome', dashboardIntro: 'Find your inspiration, itineraries and saved places in one place.', discoverForYou: 'Discover for you', discoverForYouDesc: 'Ideas selected around your interests.', planTrip: 'Plan a trip', planTripDesc: 'Create an itinerary for your next escape.', savedPlaces: 'Saved places', savedPlacesDesc: 'Keep your favourite addresses close at hand.', preferences: 'Your preferences', interests: 'Interests', savedTrips: 'Saved itineraries', editInterests: 'Edit your interests', save: 'Save', aboutEyebrow: 'ABOUT', aboutTitle: 'Dzula', aboutTagline: '“Dzula” — travel, exploration.', aboutBody: 'Dzula is a local guide for discovering Yaoundé differently: attractions, accommodation, restaurants and local dishes, with reviews, events and a community room for travellers.', aboutProject: 'Student project created for CS4122 — Distributed Systems and Cloud Computing, ICT University.', faqTitle: 'Frequently asked questions', faqReco: 'How do recommendations work?', faqRecoBody: 'We match the interests selected in your account with destination tags to suggest relevant places.', faqData: 'Is my data shared?', faqDataBody: 'No. Your interests and itineraries are used only to personalise your recommendations.', faqSuggest: 'Can I suggest a missing place?', faqSuggestBody: 'Yes — write to us and we will keep expanding the guide with community feedback.'
   }
 };
+
+TRANSLATIONS.fr.authArtTitle = 'Votre carnet de Yaoundé';
+TRANSLATIONS.fr.or = 'ou';
+TRANSLATIONS.fr.facebookSoon = 'Continuer avec Facebook';
+TRANSLATIONS.en.authArtTitle = 'Your Yaoundé notebook';
+TRANSLATIONS.en.or = 'or';
+TRANSLATIONS.en.facebookSoon = 'Continue with Facebook';
+
+function t(key) { return TRANSLATIONS[LANGUAGE][key] || key; }
 
 function setLanguage(language) {
   LANGUAGE = language;
@@ -945,6 +974,10 @@ function setLanguage(language) {
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.dataset.i18n;
     if (copy[key]) element.textContent = copy[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+    const key = element.dataset.i18nPlaceholder;
+    if (copy[key]) element.placeholder = copy[key];
   });
   document.querySelectorAll('[data-language]').forEach(button => button.classList.toggle('active', button.dataset.language === language));
 }
@@ -1093,7 +1126,8 @@ function resetMapView() {
 
 function showView(name) {
   if (PROTECTED_VIEWS.includes(name) && !TOKEN) {
-    toast('Connecte-toi pour accéder à cette section.', true);
+    setAuthMode('login');
+    toast(LANGUAGE === 'en' ? 'Sign in to access your dashboard.' : 'Connecte-toi pour accéder à ton espace.', true);
     name = 'auth';
   }
   if (name === 'admin' && !isAdmin()) {
@@ -1105,6 +1139,7 @@ function showView(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   window.scrollTo({ top: 0, behavior: 'smooth' });
   closeMobileNav();
+  if (name === 'auth') document.getElementById('login-username')?.focus();
 
   if (name === 'recommendations') loadRecommendations();
   if (name === 'itineraries') loadItineraries();
@@ -1127,6 +1162,13 @@ function handleDrawerAccountClick() {
   else { closeMobileNav(); showView('auth'); }
 }
 function goHome() { showView('explore'); }
+function startExploring() {
+  showView('explore');
+  setTimeout(() => {
+    const catalog = document.getElementById('categorySections');
+    if (catalog) catalog.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
+}
 
 function setAuthMode(mode) {
   const isLogin = mode === 'login';
@@ -1726,10 +1768,10 @@ async function submitReview(destId) {
 }
 
 const CATEGORIES = [
-  { key: 'attraction', label: 'Attractions' },
-  { key: 'hebergement', label: 'Hébergements' },
-  { key: 'restaurant', label: 'Restaurants' },
-  { key: 'plat', label: 'Plats locaux' },
+  { key: 'attraction', labelKey: 'attractions' },
+  { key: 'hebergement', labelKey: 'accommodation' },
+  { key: 'restaurant', labelKey: 'restaurants' },
+  { key: 'plat', labelKey: 'localDishes' },
 ];
 
 let searchDebounce = null;
@@ -1738,7 +1780,7 @@ async function initExplore() {
   const wrap = document.getElementById('categorySections');
   wrap.innerHTML = CATEGORIES.map(c => `
     <div class="category-section" id="catsec-${c.key}">
-      <div class="section-head"><h2>${c.label}</h2></div>
+      <div class="section-head"><h2>${t(c.labelKey)}</h2></div>
       <div class="category-filter-row" id="catfilter-${c.key}" style="display:none;"></div>
       <div class="grid-cards" id="catgrid-${c.key}"><div class="empty-state">Chargement…</div></div>
     </div>
