@@ -71,3 +71,13 @@ services:
         value: https://dzula-user.onrender.com
       - key: ADMIN_USERNAMES
         value: dominicbediguile@gmail.com
+
+  - type: web
+    name: dzula-chat
+    runtime: docker
+    dockerfilePath: ./chat-service/Dockerfile
+    dockerContext: ./chat-service
+    plan: free
+    envVars:
+      - key: JWT_SECRET
+        sync: false
