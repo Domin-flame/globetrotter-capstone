@@ -7,6 +7,7 @@ whole app is reachable from one URL (and CORS is a non-issue since
 everything appears to come from the same origin).
 """
 import os
+from urllib.parse import urlparse
 
 import requests
 from flask import Flask, request, jsonify, send_from_directory, Response
@@ -28,6 +29,32 @@ ROUTES = {
     "/itineraries": "itinerary",
     "/destinations": "recommendation",
     "/recommendations": "recommendation",
+    "/favorites": "recommendation",
+    "/messages": "chat",
+    "/uploads": "chat",
+    "/media": "chat",
+}
+
+SERVICES["chat"] = os.environ.get("CHAT_SERVICE_URL", "http://localhost:5004")
+
+IMAGE_HOSTS = {
+    "upload.wikimedia.org",
+    "tse4.mm.bing.net",
+    "dynamic-media-cdn.tripadvisor.com",
+    "images.pexels.com",
+    "yaounde6.cm",
+    "prod.cdn-medias.jeuneafrique.com",
+    "monasteremontfebe.com",
+    "camerounreservation.com",
+    "a0.muscache.com",
+    "images.unsplash.com",
+    "guestlodgings.com",
+    "cf.bstatic.com",
+    "i.ytimg.com",
+    "i.pinimg.com",
+    "i0.wp.com",
+    "www.cuisinedecheznous.net",
+    "www.hilton.com",
 }
 
 
@@ -53,8 +80,46 @@ def proxy(service_key, path):
     return Response(resp.content, status=resp.status_code, content_type=resp.headers.get("Content-Type", "application/json"))
 
 
+@app.route("/image-proxy")
+def image_proxy():
+    """Serve catalog images from approved hosts without browser hotlink failures."""
+    source_url = request.args.get("url", "").strip()
+    parsed = urlparse(source_url)
+    hostname = (parsed.hostname or "").lower()
+    allowed_host = hostname in IMAGE_HOSTS or hostname.endswith(".fbcdn.net")
+    if parsed.scheme not in {"http", "https"} or not allowed_host:
+        return jsonify({"error": "image host not allowed"}), 400
+
+    try:
+        image = requests.get(
+            source_url,
+            headers={"User-Agent": "Dzula/1.0 image proxy"},
+            timeout=15,
+        )
+    except requests.RequestException:
+        return jsonify({"error": "image unavailable"}), 502
+
+    content_type = image.headers.get("Content-Type", "")
+    if image.status_code != 200 or not content_type.startswith("image/"):
+        return jsonify({"error": "image unavailable"}), 502
+    if len(image.content) > 16 * 1024 * 1024:
+        return jsonify({"error": "image too large"}), 413
+
+    response = Response(image.content, status=200, content_type=content_type)
+    response.headers["Cache-Control"] = "public, max-age=86400"
+    return response
+
+
 @app.route("/<path:subpath>", methods=["GET", "POST", "PUT", "DELETE"])
 def route_request(subpath):
+    # Sert d'abord les fichiers statiques (images, favicon, etc.) si le
+    # chemin correspond à un fichier réel dans gateway/static/ — sinon la
+    # route générique ci-dessous les intercepte et renvoie 404 à tort.
+    static_dir = app.static_folder or "static"
+    static_path = os.path.join(static_dir, subpath)
+    if request.method == "GET" and os.path.isfile(static_path):
+        return send_from_directory(static_dir, subpath)
+
     full_path = "/" + subpath
     base_path = "/" + subpath.split("/")[0]
     if base_path in ROUTES:

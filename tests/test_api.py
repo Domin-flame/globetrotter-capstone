@@ -85,7 +85,10 @@ def test_login_wrong_password_returns_401(client):
 def test_search_destinations_no_filter(client):
     resp = client.get("/destinations")
     assert resp.status_code == 200
-    assert len(resp.get_json()) == 10
+    destinations = resp.get_json()
+    assert destinations
+    assert all(destination.get("name") for destination in destinations)
+    assert all(destination.get("category") for destination in destinations)
 
 
 def test_search_destinations_by_tag(client):
@@ -95,11 +98,11 @@ def test_search_destinations_by_tag(client):
         assert "beach" in [t.lower() for t in d["tags"]]
 
 
-def test_search_destinations_by_continent(client):
-    resp = client.get("/destinations?continent=Europe")
+def test_search_destinations_by_category(client):
+    resp = client.get("/destinations?category=attraction")
     assert resp.status_code == 200
-    names = [d["name"] for d in resp.get_json()]
-    assert "Paris" in names
+    assert resp.get_json()
+    assert all(d["category"] == "attraction" for d in resp.get_json())
 
 
 def test_search_destinations_by_max_cost(client):
@@ -110,10 +113,10 @@ def test_search_destinations_by_max_cost(client):
 
 
 def test_search_destinations_free_text(client):
-    resp = client.get("/destinations?q=souk")
+    resp = client.get("/destinations?q=musée")
     assert resp.status_code == 200
     names = [d["name"] for d in resp.get_json()]
-    assert "Marrakech" in names
+    assert "Musée National du Cameroun" in names
 
 
 def test_search_destinations_invalid_max_cost(client):

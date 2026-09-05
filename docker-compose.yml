@@ -37,6 +37,17 @@ services:
     depends_on:
       - user-service
 
+  chat-service:
+    build: ./chat-service
+    ports:
+      - "5004:5004"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
+    volumes:
+      - ./chat-service/data:/app/data
+    networks:
+      - globetrotter-net
+
   gateway:
     build: ./gateway
     ports:
@@ -45,6 +56,7 @@ services:
       - USER_SERVICE_URL=http://user-service:5001
       - ITINERARY_SERVICE_URL=http://itinerary-service:5002
       - RECOMMENDATION_SERVICE_URL=http://recommendation-service:5003
+      - CHAT_SERVICE_URL=http://chat-service:5004
     networks:
       - globetrotter-net
     depends_on:

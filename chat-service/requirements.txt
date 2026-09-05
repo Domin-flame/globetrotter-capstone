@@ -1,0 +1,6 @@
+Flask
+Flask-SocketIO
+Flask-Cors
+PyJWT
+python-socketio
+eventlet

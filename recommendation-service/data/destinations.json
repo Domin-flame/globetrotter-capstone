@@ -31,7 +31,9 @@
       "Espèces",
       "Orange Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 2,
@@ -64,7 +66,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 3,
@@ -99,7 +103,9 @@
       "Espèces",
       "Orange Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 4,
@@ -131,7 +137,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 5,
@@ -166,7 +174,9 @@
       "Orange Money",
       "MTN Mobile Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 6,
@@ -201,7 +211,9 @@
       "Orange Money",
       "MTN Mobile Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 7,
@@ -234,7 +246,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 8,
@@ -269,7 +283,9 @@
       "Orange Money",
       "MTN Mobile Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 9,
@@ -297,7 +313,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 10,
@@ -330,7 +348,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 11,
@@ -358,7 +378,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 12,
@@ -386,7 +408,9 @@
     "payment_methods": [
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 13,
@@ -422,7 +446,9 @@
       "Carte bancaire",
       "Espèces"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 15,
@@ -457,7 +483,9 @@
       "Orange Money",
       "MTN Mobile Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 14,
@@ -491,7 +519,9 @@
       "Espèces",
       "Orange Money"
     ],
-    "category": "attraction"
+    "category": "attraction",
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 16,
@@ -522,7 +552,9 @@
       "Carte bancaire",
       "Espèces",
       "Orange Money"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 17,
@@ -552,7 +584,9 @@
     "payment_methods": [
       "Carte bancaire",
       "Espèces"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 18,
@@ -581,7 +615,9 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 19,
@@ -610,7 +646,9 @@
     "payment_methods": [
       "Carte bancaire",
       "Espèces"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 20,
@@ -638,7 +676,9 @@
     ],
     "payment_methods": [
       "Espèces"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 21,
@@ -667,7 +707,9 @@
     "payment_methods": [
       "Espèces",
       "Orange Money"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 22,
@@ -695,7 +737,9 @@
     "payment_methods": [
       "Carte bancaire",
       "Espèces"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 23,
@@ -724,7 +768,9 @@
     "payment_methods": [
       "Carte bancaire",
       "Espèces"
-    ]
+    ],
+    "external_url": "",
+    "phone": ""
   },
   {
     "id": 24,

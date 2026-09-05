@@ -8,6 +8,7 @@ _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DESTINATIONS_FILE = os.path.join(_BASE_DIR, "data", "destinations.json")
 REVIEWS_FILE = os.path.join(_BASE_DIR, "data", "reviews.json")
 EVENTS_FILE = os.path.join(_BASE_DIR, "data", "events.json")
+FAVORITES_FILE = os.path.join(_BASE_DIR, "data", "favorites.json")
 
 
 def _read_json(filepath):
@@ -130,3 +131,34 @@ def has_ongoing_or_upcoming_event(destination_id):
         event_status(event) in {"ongoing", "upcoming"}
         for event in get_events_for_destination(destination_id)
     )
+
+
+def get_favorite_ids(username):
+    """Retourne l'ensemble des id de destinations favorites d'un utilisateur."""
+    favorites = _read_json(FAVORITES_FILE)
+    return {f["destination_id"] for f in favorites if f["username"] == username}
+
+
+def add_favorite(username, destination_id):
+    favorites = _read_json(FAVORITES_FILE)
+    if any(f["username"] == username and f["destination_id"] == destination_id for f in favorites):
+        return False  # déjà en favori
+    favorites.append({
+        "username": username,
+        "destination_id": destination_id,
+        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    })
+    _write_json(FAVORITES_FILE, favorites)
+    return True
+
+
+def remove_favorite(username, destination_id):
+    favorites = _read_json(FAVORITES_FILE)
+    new_favorites = [
+        f for f in favorites
+        if not (f["username"] == username and f["destination_id"] == destination_id)
+    ]
+    if len(new_favorites) == len(favorites):
+        return False  # n'était pas en favori
+    _write_json(FAVORITES_FILE, new_favorites)
+    return True

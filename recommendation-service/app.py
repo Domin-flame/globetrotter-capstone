@@ -27,6 +27,9 @@ from models import (
     create_event,
     event_status,
     has_ongoing_or_upcoming_event,
+    get_favorite_ids,
+    add_favorite,
+    remove_favorite,
 )
 
 app = Flask(__name__)
@@ -39,12 +42,13 @@ ADMIN_USERNAMES = set(
 )
 
 
-def _with_rating(dest):
+def _with_rating(dest, favorite_ids=None):
     summary = get_rating_summary(dest["id"])
     entry = dict(dest)
     entry["rating_avg"] = summary["average"]
     entry["rating_count"] = summary["count"]
     entry["has_event"] = has_ongoing_or_upcoming_event(dest["id"])
+    entry["is_favorite"] = bool(favorite_ids) and dest["id"] in favorite_ids
     return entry
 
 
@@ -67,9 +71,15 @@ def admin_stats():
 
 @app.route("/destinations", methods=["GET"])
 def search_destinations():
+    # Utilisateur optionnel : la recherche reste publique, mais si un jeton
+    # valide est fourni on ajoute le statut favori de chaque résultat.
+    username = get_current_user(request)
+    favorite_ids = get_favorite_ids(username) if username else set()
+
     q = request.args.get("q", "").strip().lower()
     tag = request.args.get("tag", "").strip().lower()
     category = request.args.get("category", "").strip().lower()
+    continent = request.args.get("continent", "").strip().lower()
     neighborhood = request.args.get("neighborhood", "").strip().lower()
     max_cost_str = request.args.get("max_cost", "").strip()
 
@@ -93,6 +103,8 @@ def search_destinations():
             continue
         if category and category != dest.get("category", "").lower():
             continue
+        if continent and continent != str(dest.get("continent", "")).lower():
+            continue
         if neighborhood and neighborhood not in dest.get("neighborhood", "").lower():
             continue
         if max_cost is not None:
@@ -101,7 +113,7 @@ def search_destinations():
                 continue
         results.append(dest)
 
-    return jsonify([_with_rating(d) for d in results]), 200
+    return jsonify([_with_rating(d, favorite_ids) for d in results]), 200
 
 
 @app.route("/recommendations", methods=["GET"])
@@ -228,6 +240,40 @@ def add_event(dest_id):
 
     event = create_event(dest_id, username, title, description, start_date, end_date)
     return jsonify({"event": dict(event, status=event_status(event))}), 201
+
+
+@app.route("/favorites", methods=["GET"])
+def list_favorites():
+    username = get_current_user(request)
+    if not username:
+        return jsonify({"error": "authentication required"}), 401
+
+    favorite_ids = get_favorite_ids(username)
+    destinations = [d for d in get_all_destinations() if d["id"] in favorite_ids]
+    return jsonify([_with_rating(d, favorite_ids) for d in destinations]), 200
+
+
+@app.route("/favorites/<int:dest_id>", methods=["POST"])
+def favorite_destination(dest_id):
+    username = get_current_user(request)
+    if not username:
+        return jsonify({"error": "authentication required"}), 401
+
+    if not any(d["id"] == dest_id for d in get_all_destinations()):
+        return jsonify({"error": "destination not found"}), 404
+
+    add_favorite(username, dest_id)  # idempotent : pas d'erreur si déjà favori
+    return jsonify({"destination_id": dest_id, "is_favorite": True}), 200
+
+
+@app.route("/favorites/<int:dest_id>", methods=["DELETE"])
+def unfavorite_destination(dest_id):
+    username = get_current_user(request)
+    if not username:
+        return jsonify({"error": "authentication required"}), 401
+
+    remove_favorite(username, dest_id)  # idempotent : pas d'erreur si absent
+    return jsonify({"destination_id": dest_id, "is_favorite": False}), 200
 
 
 @app.route("/health", methods=["GET"])

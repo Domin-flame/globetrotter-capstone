@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root {
     --ink: #1c2b3a;
@@ -90,10 +93,16 @@
 
   /* ===== Hero ===== */
   .hero {
-    position: relative; background: var(--ink); color: var(--parchment);
-    border-radius: 8px; padding: 46px 40px; margin-bottom: 34px; overflow: hidden;
+    position: relative; color: var(--parchment);
+    border-radius: 8px; padding: 64px 40px; margin-bottom: 34px; overflow: hidden;
+    background: var(--ink) url('/yaounde-hero.jpg') center/cover no-repeat;
+    min-height: 320px; display: flex; flex-direction: column; justify-content: center;
   }
   .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(28,43,58,0.55) 0%, rgba(28,43,58,0.82) 100%);
+  }
+  .hero::after {
     content: ""; position: absolute; inset: 0;
     background-image: radial-gradient(circle at 12% 30%, rgba(201,162,39,0.16), transparent 40%),
                        radial-gradient(circle at 85% 75%, rgba(61,122,109,0.22), transparent 45%);
@@ -102,6 +111,24 @@
   .hero h1 { font-family: var(--serif); font-style: italic; font-weight: 600; font-size: 34px; margin: 8px 0 8px; max-width: 560px; position: relative; }
   .hero-sub { font-size: 14.5px; color: rgba(242,232,213,0.78); max-width: 480px; position: relative; line-height: 1.5; }
   .hero-cta { margin-top: 20px; position: relative; display: flex; gap: 10px; }
+
+  /* ===== Section histoire ===== */
+  .history-section {
+    max-width: 720px; margin: 0 auto 36px; text-align: center; padding: 0 12px;
+  }
+  .history-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--postmark); margin-bottom: 6px; }
+  .history-section h2 { font-family: var(--serif); font-weight: 600; font-size: 24px; margin: 0 0 12px; }
+  .history-section p { font-size: 14px; line-height: 1.7; color: var(--ink-soft); }
+
+  /* ===== Sections par catégorie ===== */
+  .category-section { margin-bottom: 40px; }
+  .category-section .section-head { margin-bottom: 12px; }
+  .category-filter-row { margin-bottom: 12px; }
+  .category-filter-row select {
+    font-family: var(--sans); font-size: 12.5px; padding: 6px 10px; border: 1px solid var(--line);
+    border-radius: 6px; background: var(--paper); color: var(--ink);
+  }
+  .detail-actions { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 
   /* ===== Section headers ===== */
   .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
@@ -157,6 +184,76 @@
   .card .tag { font-family: var(--mono); font-size: 10px; border: 1px solid var(--line); color: var(--ink-soft); padding: 2px 7px; border-radius: 10px; }
   .card .cost { font-family: var(--mono); font-size: 12px; font-weight: 600; border-top: 1px dashed var(--line); padding: 8px 16px 0; }
   .card .cost span { color: var(--gold); }
+
+  /* Visual language: warm paper, forest green, and generous editorial spacing. */
+  :root {
+    --ink: #14231d;
+    --ink-soft: #66736d;
+    --parchment: #f5f2e9;
+    --paper: #fffefa;
+    --postmark: #b88416;
+    --lagoon: #145c3b;
+    --gold: #d6a62b;
+    --line: rgba(20,35,29,0.12);
+  }
+  body { background: var(--parchment); background-image: radial-gradient(circle at 12% 20%, rgba(214,166,43,.08), transparent 28%), radial-gradient(circle at 90% 68%, rgba(20,92,59,.07), transparent 32%); }
+  .topbar { background: rgba(255,254,250,.96); color: var(--ink); border-bottom: 1px solid var(--line); padding: 16px clamp(18px, 5vw, 72px); backdrop-filter: blur(14px); }
+  .brand-mark { font-style: normal; color: var(--ink); font-size: 25px; }
+  .brand-logo { color: var(--lagoon); }
+  .brand-tag { color: var(--postmark); }
+  .btn-primary { background: var(--lagoon); color: #fff; border-radius: 8px; }
+  .btn-ghost { color: var(--ink); border-color: var(--line); border-radius: 8px; }
+  .topbar .btn-ghost { border-color: var(--lagoon); color: var(--lagoon); }
+  .user-pill { background: rgba(20,92,59,.08); border-color: rgba(20,92,59,.18); color: var(--ink); }
+  .tabbar { background: rgba(255,254,250,.96); border-bottom: 1px solid var(--line); padding-left: clamp(18px, 5vw, 72px); }
+  .tabbar { justify-content: center; padding-right: clamp(18px, 5vw, 72px); }
+  .tab { color: var(--ink-soft); }
+  .tab.active { color: var(--lagoon); border-bottom-color: var(--gold); }
+  main { max-width: 1240px; padding: 48px clamp(18px, 5vw, 72px) 88px; }
+  .hero { min-height: 430px; border-radius: 2px; padding: clamp(32px, 6vw, 84px); background-image: url('/yaounde-hero.jpg'); box-shadow: 0 18px 36px rgba(20,35,29,.16); }
+  .hero h1 { font-style: normal; font-size: clamp(36px, 5vw, 66px); max-width: 760px; }
+  .hero-sub { font-size: 17px; max-width: 660px; }
+  .history-section { max-width: 820px; padding: 22px 12px; }
+  .history-section h2, .section-head h2 { font-size: clamp(26px, 3vw, 36px); }
+  .grid-cards { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 22px; }
+  .card { border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 8px 22px rgba(20,35,29,.08); transition: transform .2s ease, box-shadow .2s ease; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(20,35,29,.14); }
+  .card-thumb { aspect-ratio: 16/10; }
+  .card-body { padding: 18px 20px 0; }
+  .card p, .card .tags { padding-left: 20px; padding-right: 20px; }
+  .card .cost { padding-left: 20px; padding-right: 20px; }
+  .card h3 { font-size: 21px; }
+  .card .loc { color: var(--ink-soft); }
+  .card-badge { background: var(--lagoon); border-radius: 999px; }
+  .chip.active { background: var(--lagoon); border-color: var(--lagoon); }
+  .site-footer { background: var(--ink); }
+  .language-switcher { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); }
+  .language-switcher button { border: 0; border-radius: 999px; background: transparent; color: var(--ink-soft); padding: 6px 10px; font: 600 11px var(--mono); cursor: pointer; }
+  .language-switcher button.active { background: var(--lagoon); color: #fff; }
+  .dashboard-intro { margin-bottom: 28px; max-width: 700px; }
+  .dashboard-intro h1 { font-family: var(--serif); font-size: clamp(30px, 4vw, 48px); margin: 8px 0 10px; }
+  .dashboard-intro p { color: var(--ink-soft); font-size: 16px; line-height: 1.6; }
+  .dashboard-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 26px 0 34px; }
+  .dashboard-action { text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px; cursor: pointer; color: var(--ink); box-shadow: 0 8px 20px rgba(20,35,29,.06); }
+  .dashboard-action strong { display: block; font-family: var(--serif); font-size: 19px; margin-bottom: 6px; }
+  .dashboard-action span { color: var(--ink-soft); font-size: 13px; line-height: 1.4; }
+  @media (max-width: 720px) { .dashboard-actions { grid-template-columns: 1fr; } }
+  .hero::before { background: linear-gradient(180deg, rgba(20,35,29,.22), rgba(20,35,29,.58)); }
+  .hero::after { opacity: .35; }
+  .city-story { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr); gap: clamp(28px, 6vw, 84px); align-items: center; margin: 72px 0 76px; }
+  .city-story-copy { max-width: 620px; }
+  .city-story-copy h2 { font-family: var(--serif); font-size: clamp(28px, 3.5vw, 44px); line-height: 1.08; margin: 10px 0 18px; }
+  .city-story-copy p { color: var(--ink-soft); font-size: 16px; line-height: 1.75; margin: 0 0 14px; }
+  .city-story-image { aspect-ratio: 4 / 3; border-radius: 18px; overflow: hidden; box-shadow: 0 16px 34px rgba(20,35,29,.14); }
+  .city-story-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .eyebrow { font-family: var(--mono); color: var(--lagoon); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .guide-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 72px; }
+  .guide-link { border: 0; background: var(--paper); padding: 20px 18px; text-align: left; color: var(--ink); cursor: pointer; transition: background .2s, color .2s; }
+  .guide-link:hover { background: var(--lagoon); color: #fff; }
+  .guide-link strong { display: block; font-family: var(--serif); font-size: 20px; margin-bottom: 5px; }
+  .guide-link span { color: var(--ink-soft); font-size: 12.5px; }
+  .guide-link:hover span { color: rgba(255,255,255,.76); }
+  @media (max-width: 760px) { .city-story { grid-template-columns: 1fr; margin: 48px 0; } .guide-strip { grid-template-columns: repeat(2, 1fr); margin-bottom: 48px; } }
 
   /* ===== Icônes SVG (traits fins, monochromes — pas d'emoji) ===== */
   .icon { display: inline-block; vertical-align: -4px; stroke: currentColor; flex-shrink: 0; }
@@ -289,6 +386,8 @@
     color: var(--ink-soft); font-size: 13px; text-align: center; padding: 20px; margin-bottom: 14px;
   }
   .media-frame iframe { width: 100%; height: 100%; border: none; border-radius: 6px; }
+  .media-frame-photo { padding: 0; border-style: solid; overflow: hidden; }
+  .media-frame-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .audio-toggle {
     font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
     background: var(--gold); color: var(--ink); border: none; padding: 9px 16px;
@@ -298,6 +397,64 @@
   .info-card {
     background: var(--paper); border: 1px solid var(--ink); border-radius: 6px;
     padding: 18px 20px; margin-bottom: 16px; box-shadow: 3px 3px 0 rgba(28,43,58,0.08); max-width: 560px;
+  }
+
+  /* ===== Chat communautaire ===== */
+  .chat-status { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
+  .chat-status.connected { color: var(--green, #2E7D4F); }
+  .chat-status.error { color: var(--terracotta, #C1502E); }
+  .chat-box {
+    max-width: 640px; background: var(--paper); border: 1px solid var(--ink); border-radius: 8px;
+    box-shadow: 4px 4px 0 rgba(28,43,58,0.1); display: flex; flex-direction: column; height: 480px;
+  }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .chat-msg { max-width: 80%; }
+  .chat-msg .chat-msg-meta { font-family: var(--mono); font-size: 10px; color: var(--ink-soft); margin-bottom: 2px; }
+  .chat-msg .chat-msg-bubble { background: var(--parchment); border-radius: 10px; padding: 8px 12px; font-size: 13.5px; line-height: 1.4; display: inline-block; }
+  .chat-msg.own { align-self: flex-end; text-align: right; }
+  .chat-msg.own .chat-msg-bubble { background: var(--ink); color: var(--paper); }
+  .chat-input-row { display: flex; gap: 10px; padding: 14px 16px; border-top: 1px solid var(--line); }
+  .chat-input-row input { flex: 1; padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px; font-size: 13.5px; }
+  .chat-layout { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 20px; align-items: start; }
+  .chat-sidebar { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .chat-sidebar h3 { font-family: var(--serif); font-size: 20px; margin: 0 0 8px; }
+  .chat-sidebar p { color: var(--ink-soft); font-size: 13px; line-height: 1.5; margin: 0 0 16px; }
+  .chat-presence { display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font: 11px var(--mono); }
+  .chat-presence::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+  .chat-status.connected + .chat-layout .chat-presence::before { background: var(--lagoon); }
+  .chat-box { max-width: none; height: min(620px, 70vh); border-radius: 14px; box-shadow: 0 12px 26px rgba(20,35,29,.08); }
+  .chat-messages { background: linear-gradient(180deg, rgba(245,242,233,.55), transparent); }
+  .chat-msg .chat-msg-bubble { max-width: 100%; border-radius: 14px 14px 14px 4px; }
+  .chat-msg.own .chat-msg-bubble { border-radius: 14px 14px 4px 14px; }
+  .chat-input-row input { border-radius: 999px; background: var(--parchment); }
+  .chat-input-row .btn { border-radius: 999px; }
+  .chat-compose { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 14px; border-top: 1px solid var(--line); }
+  .chat-compose-row { display: flex; gap: 10px; align-items: center; }
+  .chat-compose-row input { flex: 1; }
+  .chat-attach { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--lagoon); font-size: 20px; cursor: pointer; }
+  .chat-file-name { display: none; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 10px; border-radius: 8px; background: var(--parchment); color: var(--ink-soft); font: 11px var(--mono); }
+  .chat-file-name.open { display: flex; }
+  .chat-file-name button { border: 0; background: transparent; color: var(--postmark); cursor: pointer; }
+  .chat-shared-media { display: block; max-width: 260px; max-height: 220px; border-radius: 10px; margin-top: 8px; object-fit: cover; }
+  .chat-audio { width: 260px; max-width: 100%; margin-top: 8px; }
+  .chat-comments { margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--line); text-align: left; }
+  .chat-comment { font-size: 11.5px; color: var(--ink-soft); margin: 5px 0; }
+  .chat-comment strong { color: var(--ink); }
+  .chat-comment-form { display: flex; gap: 6px; margin-top: 7px; }
+  .chat-comment-form input { min-width: 0; flex: 1; border: 1px solid var(--line); border-radius: 999px; padding: 6px 9px; font-size: 11px; }
+  .chat-comment-form button { border: 0; border-radius: 50%; width: 27px; background: var(--lagoon); color: white; cursor: pointer; }
+  .map-panel { margin-bottom: 28px; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); box-shadow: 0 12px 26px rgba(20,35,29,.08); }
+  .map-toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 4px 4px 14px; }
+  .map-toolbar input, .map-toolbar select { border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; background: var(--parchment); color: var(--ink); font: 13px var(--sans); }
+  .map-toolbar input { flex: 1; min-width: 220px; }
+  #yaoundeMap { height: min(620px, 68vh); min-height: 420px; border-radius: 12px; overflow: hidden; }
+  .map-popup h3 { font-family: var(--serif); font-size: 17px; margin: 0 0 4px; }
+  .map-popup p { color: var(--ink-soft); font-size: 12px; margin: 0 0 8px; }
+  .map-popup button { border: 0; background: var(--lagoon); color: #fff; border-radius: 999px; padding: 7px 11px; font-size: 12px; cursor: pointer; }
+  @media (max-width: 760px) { .chat-layout { grid-template-columns: 1fr; } .chat-sidebar { order: -1; } #yaoundeMap { min-height: 360px; } }
+
+  @media (max-width: 720px) {
+    .chat-box { height: 65vh; }
   }
   .info-card h4 { font-family: var(--serif); font-size: 15px; margin: 0 0 10px; }
   .transport-row { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
@@ -323,39 +480,69 @@
   .star-input .icon { width: 24px; height: 24px; color: var(--line); transition: color 0.1s; }
   .star-input .icon.filled { color: var(--gold); }
 
-  .event-badge {
-    position: absolute; top: 10px; left: 10px; font-family: var(--mono); font-size: 10px; font-weight: 600;
-    padding: 3px 8px; border-radius: 12px; letter-spacing: 0.3px; text-transform: uppercase;
-    background: var(--postmark); color: #fff; z-index: 2;
-  }
-  .event-item { padding: 12px 0; border-bottom: 1px dashed var(--line); }
-  .event-item:last-child { border-bottom: none; }
-  .event-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-  .event-title { font-family: var(--serif); font-weight: 600; font-size: 15px; }
-  .event-status { font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .event-status.ongoing { background: rgba(166,61,47,0.15); color: var(--postmark); }
-  .event-status.upcoming { background: rgba(61,122,109,0.15); color: var(--lagoon); }
-  .event-status.past { background: var(--line); color: var(--ink-soft); }
-  .event-dates { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-top: 3px; }
-  .event-desc { font-size: 13px; color: var(--ink-soft); margin-top: 6px; line-height: 1.5; }
-  .event-empty { font-size: 13px; color: var(--ink-soft); font-style: italic; }
-  .event-form-row { display: flex; gap: 10px; }
-  .event-form-row > div { flex: 1; }
-
   .hamburger-btn { display: none; background: none; border: 1px solid var(--ink); border-radius: 4px; padding: 6px 8px; cursor: pointer; color: var(--ink); }
+
+  /* ===== Tiroir de compte (structure façon MboaTrip, palette Dzula) ===== */
+  .drawer-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(28,43,58,0.45);
+    z-index: 200; backdrop-filter: blur(2px);
+  }
+  .drawer-overlay.open { display: block; }
+  .account-drawer {
+    position: fixed; top: 0; right: -340px; width: 320px; max-width: 85vw; height: 100%;
+    background: var(--paper); z-index: 201; box-shadow: -6px 0 24px rgba(28,43,58,0.25);
+    display: flex; flex-direction: column; transition: right 0.28s ease;
+  }
+  .account-drawer.open { right: 0; }
+  .drawer-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px; height: 60px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+  }
+  .drawer-head span { font-family: var(--serif); font-weight: 700; font-style: italic; color: var(--ink); }
+  .drawer-head button { background: none; border: none; color: var(--ink-soft); cursor: pointer; padding: 4px; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 6px 0; }
+  .drawer-profile {
+    width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+    background: none; border: none; cursor: pointer; text-align: left;
+  }
+  .drawer-profile:hover { background: var(--parchment); }
+  .drawer-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--gold);
+    display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-weight: 700;
+    flex-shrink: 0; font-size: 16px;
+  }
+  .drawer-profile .name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .drawer-profile .sub { font-size: 11.5px; color: var(--ink-soft); }
+  .drawer-divider { height: 1px; background: var(--line); margin: 6px 0; }
+  .drawer-section-label {
+    display: flex; align-items: center; gap: 8px; padding: 10px 18px 4px;
+    font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--ink-soft);
+  }
+  .drawer-link {
+    display: flex; align-items: center; gap: 12px; padding: 11px 18px; font-size: 13.5px;
+    color: var(--ink); text-decoration: none; background: none; border: none; width: 100%; text-align: left; cursor: pointer;
+  }
+  .drawer-link:hover { background: var(--parchment); }
+  .drawer-link .icon { color: var(--ink-soft); flex-shrink: 0; }
+  .drawer-foot { padding: 14px 18px; border-top: 1px solid var(--line); flex-shrink: 0; }
+  .drawer-foot button {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px; border-radius: 8px; background: var(--parchment); border: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--ink);
+  }
+  .fav-star-btn {
+    position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); border: none;
+    border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 2;
+  }
+  .fav-star-btn svg { color: var(--ink-soft); }
+  .fav-star-btn.active svg { color: var(--gold); fill: var(--gold); }
 
   @media (max-width: 720px) {
     .topbar { flex-wrap: wrap; row-gap: 10px; padding: 12px 16px; }
     .session-area { flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
     .hamburger-btn { display: inline-flex; }
-    .tabbar {
-      flex-direction: column; align-items: stretch; width: 100%;
-      max-height: 0; overflow: hidden; padding: 0 16px; margin: 0;
-      transition: max-height 0.25s ease, padding 0.25s ease;
-    }
-    .tabbar.mobile-open { max-height: 320px; padding: 10px 16px 14px; }
-    .tab { white-space: normal; text-align: left; padding: 12px 6px; border-bottom: 1px dashed var(--line); border-radius: 0; }
-    .tab:last-child { border-bottom: none; }
+    .tabbar { display: none; }
     main { padding: 24px 16px 60px; }
     .hero { padding: 26px 20px; }
     .hero h1 { font-size: 26px; }
@@ -392,7 +579,7 @@
     <span class="brand-tag">YAOUNDÉ</span>
   </div>
   <div class="session-area" id="sessionArea">
-    <button class="btn btn-ghost" onclick="showView('auth')">Se connecter</button>
+    <div class="language-switcher" aria-label="Language"><button class="active" data-language="fr" onclick="setLanguage('fr')">FR</button><button data-language="en" onclick="setLanguage('en')">EN</button></div>
   </div>
   <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileNav()" aria-label="Menu">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -400,55 +587,113 @@
 </div>
 
 <div class="tabbar" id="tabbar" style="display:none;">
-  <button class="tab" data-tab="explore" onclick="showView('explore')">Explorer</button>
-  <button class="tab" data-tab="recommendations" onclick="showView('recommendations')">Recommandations</button>
-  <button class="tab" data-tab="itineraries" onclick="showView('itineraries')">Mes itinéraires</button>
-  <button class="tab" data-tab="account" onclick="showView('account')">Mon compte</button>
+  <button class="tab" data-tab="explore" onclick="showView('explore')" data-i18n="explore">Explorer</button>
+  <button class="tab" data-tab="map" onclick="showView('map')" data-i18n="map">Carte</button>
+  <button class="tab" data-tab="recommendations" onclick="showView('recommendations')" data-i18n="recommendations">Recommandations</button>
+  <button class="tab" data-tab="itineraries" onclick="showView('itineraries')" data-i18n="myTrips">Mes itinéraires</button>
+  <button class="tab" data-tab="chat" onclick="showView('chat')" data-i18n="messages">Messages</button>
+  <button class="tab" data-tab="dashboard" onclick="showView('dashboard')" data-i18n="dashboard">Tableau de bord</button>
   <button class="tab" data-tab="admin" id="adminTab" style="display:none;" onclick="showView('admin')">Admin</button>
 </div>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeMobileNav()"></div>
+<aside class="account-drawer" id="accountDrawer">
+  <div class="drawer-head">
+    <span>Menu</span>
+    <button onclick="closeMobileNav()" aria-label="Fermer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <button class="drawer-profile" onclick="handleDrawerAccountClick()">
+      <span class="drawer-avatar" id="drawerAvatar">?</span>
+      <span><span class="name" id="drawerName" style="display:block;">Tableau de bord</span><span class="sub" id="drawerSub">Votre espace</span></span>
+    </button>
+
+    <div class="drawer-divider"></div>
+
+    <div class="drawer-section-label">Explorer</div>
+    <a class="drawer-link" onclick="closeMobileNav(); showView('explore');" data-i18n="explorePlaces">Lieux à Yaoundé</a>
+    <a class="drawer-link" onclick="closeMobileNav(); showView('recommendations');" data-i18n="recommendations">Recommandations</a>
+    <a class="drawer-link" onclick="closeMobileNav(); showView('itineraries');" data-i18n="myTrips">Mes itinéraires</a>
+    <a class="drawer-link" onclick="closeMobileNav(); showView('chat');">Chat communautaire</a>
+
+    <div class="drawer-divider"></div>
+
+    <button class="drawer-link" onclick="closeMobileNav(); showView('favorites');" data-i18n="favorites">Mes favoris</button>
+    <button class="drawer-link" onclick="closeMobileNav(); showView('dashboard');" data-i18n="dashboard">Tableau de bord</button>
+    <button class="drawer-link" onclick="closeMobileNav(); showView('about');" data-i18n="about">À propos de Dzula</button>
+
+    <div class="drawer-divider" id="drawerAdminDivider" style="display:none;"></div>
+    <button class="drawer-link" id="drawerAdminLink" style="display:none;" onclick="closeMobileNav(); showView('admin');">Admin</button>
+  </div>
+
+  <div class="drawer-foot" id="drawerFoot" style="display:none;">
+    <button onclick="closeMobileNav(); logout();" data-i18n="logout">Se déconnecter</button>
+  </div>
+</aside>
 
 <main>
 
   <!-- ===================== WELCOME / EXPLORE (public) ===================== -->
   <section class="view active" id="view-explore">
     <div class="hero">
-      <div class="hero-eyebrow">GUIDE LOCAL · SEPT COLLINES</div>
-      <h1>Yaoundé, quartier par quartier</h1>
-      <div class="hero-sub">Musées, marchés, collines et lieux de culte — un carnet de voyage pensé pour découvrir la capitale à pied, une adresse à la fois.</div>
+      <div class="hero-eyebrow" data-i18n="heroEyebrow">GUIDE LOCAL · SEPT COLLINES</div>
+      <h1 data-i18n="heroTitle">Yaoundé, quartier par quartier</h1>
+      <div class="hero-sub" data-i18n="heroSubtitle">Musées, marchés, collines et lieux de culte — un carnet de voyage pensé pour découvrir la capitale à pied, une adresse à la fois.</div>
       <div class="hero-cta" id="heroCta">
-        <button class="btn btn-primary" onclick="showView('auth')">Créer un compte</button>
+        <button class="btn btn-primary" onclick="showView('explore')" data-i18n="startExploring">Commencer à explorer</button>
       </div>
     </div>
 
+    <div class="history-section">
+      <div class="history-eyebrow">UN PEU D'HISTOIRE</div>
+      <h2 data-i18n="historyTitle">Yaoundé, des origines à la capitale</h2>
+      <p>Fondée à la fin du XIXᵉ siècle sur les collines habitées par les peuples Ewondo et Bane, Yaoundé fut d'abord un poste allemand avant de devenir, sous administration française, la capitale politique du Cameroun indépendant en 1960. Bâtie sur sept collines, elle mêle aujourd'hui institutions nationales, marchés animés et quartiers résidentiels verdoyants — un carrefour où se croisent les cultures de tout le pays.</p>
+    </div>
+
+    <section class="city-story" aria-labelledby="city-story-title">
+      <div class="city-story-copy">
+        <div class="eyebrow">L'ESPRIT DE YAOUNDÉ</div>
+        <h2 id="city-story-title">Une capitale à vivre, pas seulement à visiter.</h2>
+        <p>Entre les hauteurs de Fébé, les marchés du centre et les tables de Bastos, Yaoundé se découvre par ses quartiers et ses habitudes. Dzula rassemble les lieux qui donnent son rythme à la ville.</p>
+        <p>Commence par une promenade, trouve une adresse locale, puis construis ton propre itinéraire au fil des rencontres.</p>
+      </div>
+      <div class="city-story-image"><img src="/yaounde-hero.jpg" alt="Paysage urbain de Yaoundé"></div>
+    </section>
+
+    <div class="guide-strip" aria-label="Explorer Yaoundé par thème">
+      <button class="guide-link" onclick="scrollToCategory('attraction')"><strong>À voir</strong><span>Musées, marchés, collines</span></button>
+      <button class="guide-link" onclick="scrollToCategory('hebergement')"><strong>Dormir</strong><span>Hôtels et adresses pratiques</span></button>
+      <button class="guide-link" onclick="scrollToCategory('restaurant')"><strong>Manger</strong><span>Tables camerounaises</span></button>
+      <button class="guide-link" onclick="scrollToCategory('plat')"><strong>Goûter</strong><span>Les saveurs du Centre</span></button>
+    </div>
+
     <div class="section-head">
-      <h2>Lieux à Yaoundé</h2>
-      <span class="section-sub">GET /destinations</span>
+      <h2 data-i18n="catalogTitle">Le carnet de Yaoundé</h2>
     </div>
 
     <input type="text" id="exploreSearch" placeholder="Rechercher un lieu, un plat, un quartier…" oninput="onSearchInput()"
       style="width:100%; max-width:420px; font-family:var(--sans); font-size:13.5px; padding:10px 14px; border:1px solid var(--ink); border-radius:20px; background:var(--paper); color:var(--ink); margin-bottom:14px;">
 
-    <div class="chip-row" id="categoryChips">
-      <span class="chip active" data-category="">Tout</span>
-      <span class="chip" data-category="attraction">Attractions</span>
-      <span class="chip" data-category="hebergement">Hébergement</span>
-      <span class="chip" data-category="restaurant">Restaurants</span>
-      <span class="chip" data-category="plat">Plats locaux</span>
+    <div id="searchResultsSection" style="display:none;">
+      <div class="grid-cards" id="exploreGrid"></div>
     </div>
-    <div class="chip-row" id="exploreChips">
-      <span class="chip active" data-tag="">Tous les tags</span>
-      <span class="chip" data-tag="culture">Culture</span>
-      <span class="chip" data-tag="nature">Nature</span>
-      <span class="chip" data-tag="religieux">Religieux</span>
-      <span class="chip" data-tag="marché">Marché</span>
-      <span class="chip" data-tag="panorama">Panorama</span>
-      <span class="chip" data-tag="histoire">Histoire</span>
-      <span class="chip" data-tag="détente">Détente</span>
-      <span class="chip" data-tag="cuisine locale">Cuisine locale</span>
-      <span class="chip" data-tag="confort">Confort</span>
-    </div>
-    <div class="grid-cards" id="exploreGrid">
-      <div class="empty-state">Chargement des lieux…</div>
+
+    <div id="categorySections"></div>
+  </section>
+
+  <section class="view" id="view-map">
+    <div class="section-head"><h2 data-i18n="mapTitle">Explorer Yaoundé sur la carte</h2><span class="section-sub" id="mapResultCount">Chargement…</span></div>
+    <p class="section-sub" style="display:block; margin:-6px 0 18px; font-family:var(--sans); font-size:15px;" data-i18n="mapSubtitle">Trouvez les lieux, hôtels, restaurants et saveurs qui vous intéressent.</p>
+    <div class="map-panel">
+      <div class="map-toolbar">
+        <input id="mapSearch" type="search" placeholder="Rechercher un lieu…" oninput="filterMapMarkers()">
+        <select id="mapCategory" onchange="filterMapMarkers()"><option value="">Toutes les catégories</option><option value="attraction">À voir</option><option value="hebergement">Dormir</option><option value="restaurant">Manger</option><option value="plat">Goûter</option></select>
+        <button class="btn btn-primary" onclick="resetMapView()" data-i18n="centerMap">Centrer sur Yaoundé</button>
+      </div>
+      <div id="yaoundeMap" aria-label="Carte interactive de Yaoundé"></div>
     </div>
   </section>
 
@@ -505,7 +750,6 @@
   <section class="view" id="view-recommendations">
     <div class="section-head">
       <h2>Recommandé pour toi</h2>
-      <span class="section-sub">GET /recommendations</span>
     </div>
     <div class="grid-cards" id="recoGrid">
       <div class="empty-state"><strong>Pas encore de recommandations</strong>Connecte-toi pour voir les lieux qui correspondent à tes centres d'intérêt.</div>
@@ -541,15 +785,47 @@
     <div id="detailContent"></div>
   </section>
 
+  <!-- ===================== CHAT (salon communautaire) ===================== -->
+  <section class="view" id="view-chat">
+    <div class="section-head">
+      <h2>Chat communautaire</h2>
+      <span id="chatStatus" class="chat-status">Connexion…</span>
+    </div>
+    <div class="chat-layout">
+      <div class="chat-box">
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-compose">
+          <div id="chatFileName" class="chat-file-name"><span></span><button onclick="clearChatAttachment()" aria-label="Retirer la pièce jointe">×</button></div>
+          <div class="chat-compose-row">
+            <input type="file" id="chatFile" accept="image/jpeg,image/png,image/webp,audio/mpeg,audio/wav,audio/ogg,audio/mp4" hidden onchange="selectChatAttachment(event)">
+            <button class="chat-attach" onclick="document.getElementById('chatFile').click()" aria-label="Ajouter une image ou un audio" title="Ajouter une image ou un audio">+</button>
+            <input type="text" id="chatInput" placeholder="Écris un message ou partage une image…" maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage();">
+            <button class="btn btn-primary" onclick="sendChatMessage()" data-i18n="send">Envoyer</button>
+          </div>
+        </div>
+      </div>
+      <aside class="chat-sidebar"><h3 data-i18n="chatTitle">Le salon de Yaoundé</h3><p data-i18n="chatIntro">Partagez une adresse, demandez conseil ou racontez votre dernière découverte.</p><div class="chat-presence" data-i18n="chatPresence">Salon communautaire</div></aside>
+    </div>
+  </section>
+
   <!-- ===================== ACCOUNT ===================== -->
-  <section class="view" id="view-account">
-    <div class="section-head"><h2>Mon compte</h2></div>
+  <section class="view" id="view-dashboard">
+    <div class="dashboard-intro">
+      <div class="eyebrow" data-i18n="yourSpace">VOTRE ESPACE</div>
+      <h1><span data-i18n="welcome">Bienvenue</span><span id="dashboard-username"></span></h1>
+      <p data-i18n="dashboardIntro">Retrouvez vos inspirations, vos itinéraires et vos lieux favoris au même endroit.</p>
+    </div>
+    <div class="dashboard-actions">
+      <button class="dashboard-action" onclick="showView('recommendations')"><strong data-i18n="discoverForYou">Découvrir pour vous</strong><span data-i18n="discoverForYouDesc">Des idées choisies selon vos centres d'intérêt.</span></button>
+      <button class="dashboard-action" onclick="showView('itineraries')"><strong data-i18n="planTrip">Planifier un voyage</strong><span data-i18n="planTripDesc">Créez un itinéraire pour votre prochaine escapade.</span></button>
+      <button class="dashboard-action" onclick="showView('favorites')"><strong data-i18n="savedPlaces">Lieux sauvegardés</strong><span data-i18n="savedPlacesDesc">Gardez vos adresses préférées sous la main.</span></button>
+    </div>
+    <div class="section-head"><h2 data-i18n="preferences">Vos préférences</h2></div>
     <div class="account-card">
-      <div class="account-row"><span class="k">Utilisateur</span><span id="acct-username">—</span></div>
-      <div class="account-row"><span class="k">Centres d'intérêt</span><span id="acct-prefs">—</span></div>
-      <div class="account-row"><span class="k">Itinéraires enregistrés</span><span id="acct-itin-count">—</span></div>
+      <div class="account-row"><span class="k" data-i18n="interests">Centres d'intérêt</span><span id="acct-prefs">—</span></div>
+      <div class="account-row"><span class="k" data-i18n="savedTrips">Itinéraires enregistrés</span><span id="acct-itin-count">—</span></div>
       <div class="account-row" style="flex-direction:column; align-items:flex-start; gap:10px;">
-        <span class="k">Modifier mes centres d'intérêt</span>
+        <span class="k" data-i18n="editInterests">Modifier mes centres d'intérêt</span>
         <div class="chip-row" id="acctPrefChips" style="margin-bottom:0;">
           <span class="chip" data-tag="culture">Culture</span>
           <span class="chip" data-tag="nature">Nature</span>
@@ -559,9 +835,8 @@
           <span class="chip" data-tag="histoire">Histoire</span>
           <span class="chip" data-tag="détente">Détente</span>
         </div>
-        <button class="btn btn-ghost" style="color:var(--ink); border-color:var(--ink);" onclick="savePreferences()">Enregistrer</button>
+        <button class="btn btn-ghost" style="color:var(--ink); border-color:var(--ink);" onclick="savePreferences()" data-i18n="save">Enregistrer</button>
       </div>
-      <button class="btn btn-danger-ghost" style="margin-top:18px; width:100%;" onclick="logout()">Se déconnecter</button>
     </div>
   </section>
 
@@ -576,6 +851,23 @@
     <div class="info-card" style="max-width:560px;">
       <h4>Destinations les plus ajoutées aux itinéraires</h4>
       <div id="adminTopDestinations"><span style="font-size:13px;color:var(--ink-soft);">Chargement…</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== FAVORIS ===================== -->
+  <section class="view" id="view-favorites">
+    <div class="section-head"><h2>Mes favoris</h2></div>
+    <div class="grid-cards" id="favoritesGrid"><div class="empty-state">Chargement…</div></div>
+  </section>
+
+  <!-- ===================== À PROPOS ===================== -->
+  <section class="view" id="view-about">
+    <div class="history-section" style="text-align:left; max-width:640px; margin:0;">
+      <div class="history-eyebrow">À PROPOS</div>
+      <h2>Dzula</h2>
+      <p style="font-style:italic; margin-bottom:18px;">« Dzula » — voyage, exploration.</p>
+      <p>Dzula est un guide local pour découvrir Yaoundé autrement : attractions, hébergements, restaurants et plats typiques, avec avis, événements et un salon communautaire pour échanger entre voyageurs.</p>
+      <p>Projet étudiant réalisé dans le cadre du cours CS4122 — Distributed Systems and Cloud Computing, ICT University.</p>
     </div>
   </section>
 
@@ -628,6 +920,34 @@
 let TOKEN = localStorage.getItem('gt_token') || null;
 let USERNAME = localStorage.getItem('gt_username') || null;
 let USER_PREFS = [];
+let LANGUAGE = localStorage.getItem('gt_language') || 'fr';
+
+const TRANSLATIONS = {
+  fr: {
+    explore: 'Explorer', recommendations: 'Recommandations', myTrips: 'Mes itinéraires', messages: 'Messages', dashboard: 'Tableau de bord',
+    explorePlaces: 'Lieux à Yaoundé', favorites: 'Mes favoris', about: 'À propos de Dzula', logout: 'Se déconnecter',
+    heroEyebrow: 'GUIDE LOCAL · SEPT COLLINES', heroTitle: 'Yaoundé, quartier par quartier', heroSubtitle: 'Musées, marchés, collines et lieux de culte — un carnet de voyage pensé pour découvrir la capitale à pied, une adresse à la fois.', startExploring: 'Commencer à explorer', map: 'Carte', mapTitle: 'Explorer Yaoundé sur la carte', mapSubtitle: 'Trouvez les lieux, hôtels, restaurants et saveurs qui vous intéressent.', centerMap: 'Centrer sur Yaoundé', send: 'Envoyer', chatTitle: 'Le salon de Yaoundé', chatIntro: 'Partagez une adresse, demandez conseil ou racontez votre dernière découverte.', chatPresence: 'Salon communautaire',
+    historyTitle: 'Yaoundé, des origines à la capitale', catalogTitle: 'Le carnet de Yaoundé', yourSpace: 'VOTRE ESPACE', welcome: 'Bienvenue', dashboardIntro: 'Retrouvez vos inspirations, vos itinéraires et vos lieux favoris au même endroit.', discoverForYou: 'Découvrir pour vous', discoverForYouDesc: "Des idées choisies selon vos centres d'intérêt.", planTrip: 'Planifier un voyage', planTripDesc: 'Créez un itinéraire pour votre prochaine escapade.', savedPlaces: 'Lieux sauvegardés', savedPlacesDesc: 'Gardez vos adresses préférées sous la main.', preferences: 'Vos préférences', interests: "Centres d'intérêt", savedTrips: 'Itinéraires enregistrés', editInterests: "Modifier mes centres d'intérêt", save: 'Enregistrer'
+  },
+  en: {
+    explore: 'Explore', recommendations: 'For you', myTrips: 'My trips', messages: 'Messages', dashboard: 'Dashboard',
+    explorePlaces: 'Places in Yaoundé', favorites: 'Saved places', about: 'About Dzula', logout: 'Log out',
+    heroEyebrow: 'LOCAL GUIDE · SEVEN HILLS', heroTitle: 'Yaoundé, one neighbourhood at a time', heroSubtitle: 'Museums, markets, hills and places of worship — a travel notebook for discovering the capital on foot, one address at a time.', startExploring: 'Start exploring', map: 'Map', mapTitle: 'Explore Yaoundé on the map', mapSubtitle: 'Find places, hotels, restaurants and local flavours that interest you.', centerMap: 'Center on Yaoundé', send: 'Send', chatTitle: 'The Yaoundé room', chatIntro: 'Share an address, ask for advice or tell us about your latest discovery.', chatPresence: 'Community room',
+    historyTitle: 'Yaoundé, from origins to capital', catalogTitle: 'The Yaoundé notebook', yourSpace: 'YOUR SPACE', welcome: 'Welcome', dashboardIntro: 'Find your inspiration, itineraries and saved places in one place.', discoverForYou: 'Discover for you', discoverForYouDesc: 'Ideas selected around your interests.', planTrip: 'Plan a trip', planTripDesc: 'Create an itinerary for your next escape.', savedPlaces: 'Saved places', savedPlacesDesc: 'Keep your favourite addresses close at hand.', preferences: 'Your preferences', interests: 'Interests', savedTrips: 'Saved itineraries', editInterests: 'Edit your interests', save: 'Save'
+  }
+};
+
+function setLanguage(language) {
+  LANGUAGE = language;
+  localStorage.setItem('gt_language', language);
+  document.documentElement.lang = language;
+  const copy = TRANSLATIONS[language];
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.dataset.i18n;
+    if (copy[key]) element.textContent = copy[key];
+  });
+  document.querySelectorAll('[data-language]').forEach(button => button.classList.toggle('active', button.dataset.language === language));
+}
 
 // ⚠️ Vérification purement cosmétique côté client (cache/affiche l'onglet).
 // La vraie autorisation est imposée côté serveur (ADMIN_USERNAMES sur
@@ -644,7 +964,6 @@ const ICON = {
   pin: `<svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>`,
   star: `<svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.6 1.7 7-6.3-3.8-6.3 3.8 1.7-7-5.4-4.6 7.1-.6z"/></svg>`,
   calendar: `<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`,
-  cart: `<svg class="icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.2 12.2a2 2 0 0 0 2 1.6H18a2 2 0 0 0 2-1.6L21.5 7H5.2"/></svg>`,
 };
 
 function baseUrl() {
@@ -652,6 +971,16 @@ function baseUrl() {
   // Si ouvert en local en double-cliquant (file://), on retombe sur le serveur local.
   if (window.location.protocol === 'file:') return 'http://127.0.0.1:5000';
   return window.location.origin;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+}
+
+function imageProxyUrl(sourceUrl) {
+  return `${baseUrl()}/image-proxy?url=${encodeURIComponent(sourceUrl)}`;
 }
 
 // ===================== Toasts =====================
@@ -705,7 +1034,62 @@ async function apiCall(method, path, { body = null, auth = false } = {}) {
 }
 
 // ===================== View routing =====================
-const PROTECTED_VIEWS = ['recommendations', 'itineraries', 'account'];
+const PROTECTED_VIEWS = ['recommendations', 'itineraries', 'dashboard', 'chat', 'favorites'];
+let yaoundeMap = null;
+let mapMarkers = [];
+const YAOUNDE_CENTER = [3.848, 11.502];
+const NEIGHBORHOOD_COORDINATES = {
+  'Centre-ville': [3.866, 11.521], 'Mvolyé': [3.833, 11.505], 'Fébé': [3.891, 11.512],
+  'Mont Fébé': [3.891, 11.512], 'Mokolo': [3.872, 11.501], 'Mvog-Betsi': [3.832, 11.486],
+  'Mvog-Ada': [3.864, 11.538], 'Bastos': [3.886, 11.532], 'Warda': [3.857, 11.525], 'Yaoundé': YAOUNDE_CENTER
+};
+
+function coordinateForDestination(destination) {
+  const neighborhood = destination.neighborhood || '';
+  const key = Object.keys(NEIGHBORHOOD_COORDINATES).find(name => neighborhood.includes(name));
+  return key ? NEIGHBORHOOD_COORDINATES[key] : YAOUNDE_CENTER;
+}
+
+function initMap() {
+  if (yaoundeMap || typeof L === 'undefined') return;
+  yaoundeMap = L.map('yaoundeMap', { zoomControl: true }).setView(YAOUNDE_CENTER, 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+  }).addTo(yaoundeMap);
+  loadMapDestinations();
+}
+
+async function loadMapDestinations() {
+  const response = await apiCall('GET', '/destinations');
+  if (!response || response.status !== 200) return;
+  mapMarkers = response.data.map(destination => ({ destination, marker: null }));
+  renderMapMarkers();
+}
+
+function renderMapMarkers() {
+  if (!yaoundeMap) return;
+  mapMarkers.forEach(item => { if (item.marker) item.marker.remove(); });
+  const query = (document.getElementById('mapSearch')?.value || '').trim().toLowerCase();
+  const category = document.getElementById('mapCategory')?.value || '';
+  let visible = 0;
+  mapMarkers.forEach(item => {
+    const destination = item.destination;
+    const searchable = `${destination.name} ${destination.neighborhood} ${destination.description}`.toLowerCase();
+    if ((query && !searchable.includes(query)) || (category && destination.category !== category)) return;
+    const [lat, lng] = coordinateForDestination(destination);
+    const marker = L.marker([lat, lng]).addTo(yaoundeMap);
+    marker.bindPopup(`<div class="map-popup"><h3>${escapeHtml(destination.name)}</h3><p>${escapeHtml(destination.neighborhood || 'Yaoundé')}</p><button onclick="openDetail(${destination.id})">Voir la fiche</button></div>`);
+    item.marker = marker;
+    visible += 1;
+  });
+  const count = document.getElementById('mapResultCount');
+  if (count) count.textContent = `${visible} lieu${visible > 1 ? 'x' : ''}`;
+}
+
+function filterMapMarkers() { renderMapMarkers(); }
+function resetMapView() {
+  if (yaoundeMap) yaoundeMap.setView(YAOUNDE_CENTER, 12);
+}
 
 function showView(name) {
   if (PROTECTED_VIEWS.includes(name) && !TOKEN) {
@@ -720,15 +1104,27 @@ function showView(name) {
   document.getElementById('view-' + name).classList.add('active');
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  document.getElementById('tabbar').classList.remove('mobile-open'); // referme le menu hamburger après un clic
+  closeMobileNav();
 
   if (name === 'recommendations') loadRecommendations();
   if (name === 'itineraries') loadItineraries();
-  if (name === 'account') renderAccount();
+  if (name === 'dashboard') renderDashboard();
   if (name === 'admin') loadAdminStats();
+  if (name === 'chat') openChat();
+  if (name === 'favorites') loadFavorites();
+  if (name === 'map') { initMap(); setTimeout(() => yaoundeMap && yaoundeMap.invalidateSize(), 80); }
 }
 function toggleMobileNav() {
-  document.getElementById('tabbar').classList.toggle('mobile-open');
+  document.getElementById('accountDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+}
+function closeMobileNav() {
+  document.getElementById('accountDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+function handleDrawerAccountClick() {
+  if (TOKEN) { closeMobileNav(); showView('dashboard'); }
+  else { closeMobileNav(); showView('auth'); }
 }
 function goHome() { showView('explore'); }
 
@@ -742,28 +1138,70 @@ function setAuthMode(mode) {
 
 // ===================== Session UI =====================
 function renderSession() {
-  const area = document.getElementById('sessionArea');
   const tabbar = document.getElementById('tabbar');
   const heroCta = document.getElementById('heroCta');
   const adminTab = document.getElementById('adminTab');
   const devDrawer = document.getElementById('devDrawer');
 
   if (TOKEN && USERNAME) {
-    area.innerHTML = `
-      <span class="user-pill"><span class="dot"></span><span class="username-text">${USERNAME}</span></span>
-      <button class="btn btn-ghost" onclick="logout()">Se déconnecter</button>
-    `;
     tabbar.style.display = 'flex';
-    heroCta.innerHTML = `<button class="btn btn-primary" onclick="showView('recommendations')">Voir mes recommandations</button>`;
+    heroCta.innerHTML = `<button class="btn btn-primary" onclick="showView('dashboard')">${TRANSLATIONS[LANGUAGE].dashboard}</button>`;
+
+    document.getElementById('drawerAvatar').textContent = USERNAME.charAt(0).toUpperCase();
+    document.getElementById('drawerName').textContent = TRANSLATIONS[LANGUAGE].dashboard;
+    document.getElementById('drawerSub').textContent = USERNAME;
+    document.getElementById('drawerFoot').style.display = 'block';
   } else {
-    area.innerHTML = `<button class="btn btn-ghost" onclick="showView('auth')">Se connecter</button>`;
-    tabbar.style.display = 'none';
-    heroCta.innerHTML = `<button class="btn btn-primary" onclick="showView('auth')">Créer un compte</button>`;
+    tabbar.style.display = 'flex';
+    heroCta.innerHTML = `<button class="btn btn-primary" onclick="showView('explore')">${TRANSLATIONS[LANGUAGE].startExploring}</button>`;
+
+    document.getElementById('drawerAvatar').textContent = '?';
+    document.getElementById('drawerName').textContent = TRANSLATIONS[LANGUAGE].dashboard;
+    document.getElementById('drawerSub').textContent = 'Accéder à votre espace';
+    document.getElementById('drawerFoot').style.display = 'none';
   }
 
   // La console dev et l'onglet admin ne sont visibles que pour ADMIN_USERNAME.
   adminTab.style.display = isAdmin() ? 'inline-block' : 'none';
   devDrawer.style.display = isAdmin() ? 'block' : 'none';
+  document.getElementById('drawerAdminLink').style.display = isAdmin() ? 'flex' : 'none';
+  document.getElementById('drawerAdminDivider').style.display = isAdmin() ? 'block' : 'none';
+  setLanguage(LANGUAGE);
+}
+
+// ===================== Favoris =====================
+async function loadFavorites() {
+  const grid = document.getElementById('favoritesGrid');
+  const r = await apiCall('GET', '/favorites', { auth: true });
+  if (!r || r.status < 200 || r.status >= 300) {
+    grid.innerHTML = `<div class="empty-state"><strong>Impossible de charger tes favoris</strong></div>`;
+    return;
+  }
+  grid.innerHTML = r.data.length
+    ? r.data.map(d => cardHtml(d)).join('')
+    : `<div class="empty-state"><strong>Aucun favori pour l'instant</strong>Clique sur l'étoile d'un lieu pour l'ajouter ici.</div>`;
+}
+
+async function toggleFavorite(destId, event) {
+  event.stopPropagation(); // ne pas ouvrir la fiche détail en cliquant sur l'étoile
+  if (!TOKEN) { toast('Connecte-toi pour ajouter un favori.', true); return; }
+
+  const dest = DEST_CACHE[destId];
+  const nowFavorite = !(dest && dest.is_favorite);
+  const method = nowFavorite ? 'POST' : 'DELETE';
+
+  const r = await apiCall(method, `/favorites/${destId}`, { auth: true });
+  if (r && r.status >= 200 && r.status < 300) {
+    if (dest) dest.is_favorite = nowFavorite;
+    document.querySelectorAll(`.fav-star-btn[data-dest-id="${destId}"]`).forEach(btn => {
+      btn.classList.toggle('active', nowFavorite);
+    });
+    if (!nowFavorite && document.getElementById('view-favorites').classList.contains('active')) {
+      loadFavorites(); // rafraîchit la liste si on est déjà sur la page Favoris
+    }
+  } else {
+    toast('Impossible de mettre à jour ce favori.', true);
+  }
 }
 
 async function loadAdminStats() {
@@ -787,9 +1225,146 @@ async function loadAdminStats() {
   }
 }
 
+// ===================== Chat communautaire =====================
+// ⚠️ Ce service n'est PAS relayé par le gateway (voir la note dans
+// chat-service/app.py) — le navigateur s'y connecte directement.
+// Remplace par l'URL publique de ton chat-service une fois déployé.
+function chatServiceUrl() {
+  return window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+    ? `${window.location.protocol}//${window.location.hostname}:5004`
+    : window.location.origin;
+}
+
+let chatSocket = null;
+
+function chatMediaUrl(url) {
+  return url.startsWith('http') ? url : `${chatServiceUrl()}${url}`;
+}
+
+function chatAppendMessage(msg) {
+  const container = document.getElementById('chatMessages');
+  const isOwn = msg.username === USERNAME;
+  const time = new Date(msg.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  const el = document.createElement('div');
+  el.className = 'chat-msg' + (isOwn ? ' own' : '');
+  el.dataset.messageId = msg.id || '';
+  const media = msg.media && msg.media.url ? (msg.media.type || '').startsWith('image/')
+    ? `<img class="chat-shared-media" src="${escapeHtml(chatMediaUrl(msg.media.url))}" alt="${escapeHtml(msg.media.name || 'Image partagée')}" loading="lazy">`
+    : `<audio class="chat-audio" controls preload="metadata" src="${escapeHtml(chatMediaUrl(msg.media.url))}"></audio>` : '';
+  const comments = (msg.comments || []).map(comment => `<div class="chat-comment"><strong>${escapeHtml(comment.username)}</strong> ${escapeHtml(comment.text)}</div>`).join('');
+  el.innerHTML = `<div class="chat-msg-meta">${escapeHtml(isOwn ? 'Toi' : msg.username)} · ${time}</div><div class="chat-msg-bubble">${escapeHtml(msg.text || '')}${media}<div class="chat-comments">${comments}<form class="chat-comment-form" onsubmit="submitChatComment(event, '${msg.id || ''}')"><input maxlength="300" placeholder="Ajouter un commentaire…"><button aria-label="Commenter">↗</button></form></div></div>`;
+  container.appendChild(el);
+  container.scrollTop = container.scrollHeight;
+}
+
+function selectChatAttachment(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const label = document.getElementById('chatFileName');
+  label.querySelector('span').textContent = `${file.name} · ${Math.ceil(file.size / 1024)} Ko`;
+  label.classList.add('open');
+}
+
+function clearChatAttachment() {
+  document.getElementById('chatFile').value = '';
+  document.getElementById('chatFileName').classList.remove('open');
+}
+
+async function uploadChatAttachment(file) {
+  const form = new FormData();
+  form.append('file', file);
+  const response = await fetch(`${chatServiceUrl()}/uploads`, { method: 'POST', headers: { Authorization: `Bearer ${TOKEN}` }, body: form });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Upload impossible');
+  return data;
+}
+
+async function submitChatComment(event, messageId) {
+  event.preventDefault();
+  const input = event.currentTarget.querySelector('input');
+  const text = input.value.trim();
+  if (!text) return;
+  const response = await fetch(`${chatServiceUrl()}/messages/${messageId}/comments`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify({ text }) });
+  if (!response.ok) { toast('Impossible de publier le commentaire.', true); return; }
+  input.value = '';
+}
+
+async function openChat() {
+  const statusEl = document.getElementById('chatStatus');
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = '';
+
+  // Historique chargé une fois via REST classique
+  try {
+    const res = await fetch(`${baseUrl()}/messages`);
+    const data = await res.json();
+    (data.messages || []).forEach(chatAppendMessage);
+  } catch (e) {
+    statusEl.textContent = 'Historique indisponible';
+    statusEl.className = 'chat-status error';
+  }
+
+  if (chatSocket && chatSocket.connected) return; // déjà connecté, pas besoin de rouvrir
+
+  statusEl.textContent = 'Connexion…';
+  statusEl.className = 'chat-status';
+
+  chatSocket = io(chatServiceUrl(), { auth: { token: TOKEN } });
+
+  chatSocket.on('connect', () => {
+    statusEl.textContent = 'Connecté';
+    statusEl.className = 'chat-status connected';
+  });
+
+  chatSocket.on('disconnect', () => {
+    statusEl.textContent = 'Déconnecté';
+    statusEl.className = 'chat-status error';
+  });
+
+  chatSocket.on('connect_error', () => {
+    statusEl.textContent = 'Connexion impossible';
+    statusEl.className = 'chat-status error';
+  });
+
+  chatSocket.on('new_message', chatAppendMessage);
+
+  chatSocket.on('message_comment', ({ message_id, comment }) => {
+    const message = document.querySelector(`.chat-msg[data-message-id="${message_id}"]`);
+    if (!message) return;
+    const comments = message.querySelector('.chat-comments');
+    const form = comments.querySelector('.chat-comment-form');
+    const item = document.createElement('div');
+    item.className = 'chat-comment';
+    item.innerHTML = `<strong>${escapeHtml(comment.username)}</strong> ${escapeHtml(comment.text)}`;
+    comments.insertBefore(item, form);
+  });
+
+  chatSocket.on('chat_error', (data) => {
+    toast(data.error || 'Erreur du chat.', true);
+  });
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  const file = document.getElementById('chatFile').files[0];
+  if ((!text && !file) || !chatSocket || !chatSocket.connected) return;
+  let media = null;
+  try {
+    if (file) media = await uploadChatAttachment(file);
+  } catch (error) {
+    toast(error.message, true);
+    return;
+  }
+  chatSocket.emit('send_message', { token: TOKEN, text, media });
+  input.value = '';
+  clearChatAttachment();
+}
+
 function logout() {
   TOKEN = null; USERNAME = null; USER_PREFS = [];
   localStorage.removeItem('gt_token'); localStorage.removeItem('gt_username');
+  if (chatSocket) { chatSocket.disconnect(); chatSocket = null; }
   renderSession();
   showView('explore');
   toast('Déconnecté.');
@@ -866,8 +1441,8 @@ async function handleGoogleCredential(response) {
     localStorage.setItem('gt_token', TOKEN); localStorage.setItem('gt_username', USERNAME);
     renderSession();
     if (r.data.is_new_user) {
-      toast('Compte créé via Google — choisis tes centres d\'intérêt dans "Mon compte".');
-      showView('account');
+      toast('Compte créé via Google — choisis tes centres d\'intérêt dans ton tableau de bord.');
+      showView('dashboard');
     } else {
       toast(`Bienvenue, ${USERNAME}.`);
       showView('recommendations');
@@ -903,21 +1478,27 @@ function cardHtml(d, opts) {
   const ratingHtml = d.rating_count
     ? `<div class="card-rating">${starsHtml(d.rating_avg)} ${d.rating_avg.toFixed(1)} (${d.rating_count})</div>`
     : `<div class="card-rating" style="color:var(--ink-soft);opacity:0.7;">Pas encore noté</div>`;
+  const eventBadge = d.has_event
+    ? `<span class="card-badge" style="top:auto; bottom:10px; background: var(--gold); color: var(--ink);">${ICON.calendar} Événement en cours</span>`
+    : '';
   const photo = d.media && d.media.photo_url;
   const thumb = photo
-    ? `<img src="${photo}" alt="${d.name}" loading="lazy">`
-    : `<span class="thumb-placeholder">${ICON.camera}<span class="placeholder-label">${d.name}</span></span>`;
-  const eventBadge = d.has_event ? `<span class="event-badge">Événement</span>` : '';
+    ? `<img src="${escapeHtml(imageProxyUrl(photo))}" alt="${escapeHtml(d.name)}" loading="lazy" onerror="this.onerror=null;this.src='/yaounde-hero.jpg'">`
+    : `<span class="thumb-placeholder">${ICON.camera}<span class="placeholder-label">${escapeHtml(d.name)}</span></span>`;
+  const favBtn = `
+    <button class="fav-star-btn${d.is_favorite ? ' active' : ''}" data-dest-id="${d.id}" onclick="toggleFavorite(${d.id}, event)" aria-label="Favori">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.5l2.9 6.6 7.1.6-5.4 4.6 1.7 7-6.3-3.8-6.3 3.8 1.7-7-5.4-4.6 7.1-.6z"/></svg>
+    </button>`;
   return `
     <div class="card" style="cursor:pointer;" onclick="openDetail(${d.id})">
-      <div class="card-thumb">${thumb}${badge}${eventBadge}</div>
+      <div class="card-thumb">${thumb}${favBtn}${badge}${eventBadge}</div>
       <div class="card-body">
-        <h3>${d.name || '—'}</h3>
-        <div class="loc">${ICON.pin}${d.neighborhood || ''}</div>
+        <h3>${escapeHtml(d.name || '—')}</h3>
+        <div class="loc">${ICON.pin}${escapeHtml(d.neighborhood || '')}</div>
         ${ratingHtml}
       </div>
-      <p>${d.description || ''}</p>
-      <div class="tags">${(d.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <p>${escapeHtml(d.description || '')}</p>
+      <div class="tags">${(d.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="cost">${cost}</div>
     </div>`;
 }
@@ -926,58 +1507,78 @@ function openDetail(id) {
   const d = DEST_CACHE[id];
   if (!d) return;
   const container = document.getElementById('detailContent');
+  const isPlat = d.category === 'plat';
 
+  // Priorité à la photo (quasi toujours disponible) plutôt qu'une vidéo
+  // absente ou peu représentative — la vidéo reste un bonus, pas un prérequis.
   let mediaHtml;
   if (d.media && d.media.video_embed_url) {
     mediaHtml = `<div class="media-frame"><iframe src="${d.media.video_embed_url}" allowfullscreen></iframe></div>`;
+  } else if (d.media && d.media.photo_url) {
+    mediaHtml = `<div class="media-frame media-frame-photo"><img src="${escapeHtml(imageProxyUrl(d.media.photo_url))}" alt="${escapeHtml(d.name)}" onerror="this.onerror=null;this.src='/yaounde-hero.jpg'"></div>`;
   } else {
-    mediaHtml = `<div class="media-frame">${ICON.camera}<br>Vidéo pas encore disponible pour ce lieu.<br>${(d.media && d.media.media_note) || ''}</div>`;
+    mediaHtml = `<div class="media-frame">${ICON.camera}<br>Pas encore de visuel pour ${isPlat ? 'ce plat' : 'ce lieu'}.<br>${(d.media && d.media.media_note) || ''}</div>`;
   }
 
-  const paymentHtml = (d.payment_methods || []).map(p => `<span class="tag">${p}</span>`).join('')
-    || '<div style="font-size:13px;color:var(--ink-soft);">Aucune info disponible.</div>';
+  let practicalHtml;
+  if (isPlat) {
+    const whereHtml = (d.where_to_find || []).map(w => `
+      <div class="transport-row"><span class="mode">${w.name}</span><span>${w.neighborhood ? w.neighborhood + ' — ' : ''}${w.notes || ''}</span></div>
+    `).join('') || '<div style="font-size:13px;color:var(--ink-soft);">Pas encore de lieu référencé pour ce plat.</div>';
 
-  // Les plats n'ont pas de "comment y aller" (ce ne sont pas des lieux) —
-  // on affiche plutôt où se les procurer, avec un bouton Commander.
-  let logisticsCardHtml;
-  if (d.category === 'plat') {
-    const salesHtml = (d.points_of_sale || []).map(p => `
-      <div class="transport-row"><span class="mode">${ICON.pin}</span><span>${p}</span></div>
-    `).join('') || '<div style="font-size:13px;color:var(--ink-soft);">Points de vente à préciser prochainement.</div>';
-    logisticsCardHtml = `
+    const orderBtn = d.order_whatsapp
+      ? `<a class="btn btn-primary" style="display:inline-block;margin-top:12px;" target="_blank" rel="noopener" href="https://wa.me/${d.order_whatsapp.replace(/[^0-9]/g,'')}?text=${encodeURIComponent('Bonjour, je souhaite commander : ' + d.name)}">Commander via WhatsApp</a>`
+      : `<button class="btn-social-placeholder" disabled title="Bientôt disponible" style="margin-top:12px;">Commander via WhatsApp</button>`;
+
+    practicalHtml = `
       <div class="info-card">
-        <h4 class="icon-inline">${ICON.pin} Où se le procurer</h4>
-        ${salesHtml}
-        <button class="btn btn-ghost" style="margin-top:12px; color:var(--ink); border-color:var(--ink);" onclick="orderComingSoon()">${ICON.cart} Commander</button>
+        <h4 class="icon-inline">${ICON.pin} Où l'acheter</h4>
+        ${whereHtml}
+        ${orderBtn}
       </div>`;
   } else {
     const transportHtml = (d.transport_options || []).map(t => `
       <div class="transport-row"><span class="mode">${t.mode}</span><span>${t.notes}</span></div>
     `).join('') || '<div style="font-size:13px;color:var(--ink-soft);">Aucune info transport disponible.</div>';
-    logisticsCardHtml = `
+
+    const paymentHtml = (d.payment_methods || []).map(p => `<span class="tag">${p}</span>`).join('')
+      || '<div style="font-size:13px;color:var(--ink-soft);">Aucune info disponible.</div>';
+
+    practicalHtml = `
       <div class="info-card">
         <h4 class="icon-inline">${ICON.car} Comment y aller</h4>
         ${transportHtml}
+      </div>
+      <div class="info-card">
+        <h4 class="icon-inline">${ICON.wallet} Moyens de paiement</h4>
+        <div class="payment-chips">${paymentHtml}</div>
       </div>`;
   }
+
+  const actionButtonsHtml = !isPlat ? `
+    <div class="detail-actions">
+      ${d.external_url
+        ? `<a class="btn btn-ghost" style="color:var(--ink); border-color:var(--ink);" target="_blank" rel="noopener" href="${d.external_url}">En savoir plus ↗</a>`
+        : ''}
+      ${d.phone
+        ? `<a class="btn btn-primary" href="tel:${d.phone.replace(/[^0-9+]/g,'')}">Appeler / Réserver</a>`
+        : ''}
+    </div>` : '';
 
   container.innerHTML = `
     <div class="detail-head"><h1>${d.name}</h1></div>
     <div class="detail-loc">${ICON.pin}${d.neighborhood || ''}</div>
+    ${actionButtonsHtml}
     ${mediaHtml}
     <p class="detail-desc">${d.description || ''}</p>
-    ${logisticsCardHtml}
+    ${practicalHtml}
     <div class="info-card">
-      <h4 class="icon-inline">${ICON.wallet} Moyens de paiement</h4>
-      <div class="payment-chips">${paymentHtml}</div>
+      <h4 class="icon-inline">${ICON.calendar} Événements</h4>
+      <div id="eventsContent"><div class="review-empty">Chargement…</div></div>
     </div>
     <div class="info-card">
       <h4 class="icon-inline">${ICON.star} Avis</h4>
       <div id="reviewsContent"><div class="review-empty">Chargement des avis…</div></div>
-    </div>
-    <div class="info-card">
-      <h4 class="icon-inline">${ICON.calendar} Événements</h4>
-      <div id="eventsContent"><div class="event-empty">Chargement des événements…</div></div>
     </div>
   `;
   showView('detail');
@@ -985,8 +1586,64 @@ function openDetail(id) {
   loadEvents(d.id);
 }
 
-function orderComingSoon() {
-  toast('Commande en ligne bientôt disponible — pas encore implémenté dans cette version.');
+// ===================== Événements =====================
+async function loadEvents(destId) {
+  const container = document.getElementById('eventsContent');
+  const r = await apiCall('GET', `/destinations/${destId}/events`);
+  if (!r || r.status < 200 || r.status >= 300) {
+    container.innerHTML = '<div class="review-empty">Impossible de charger les événements.</div>';
+    return;
+  }
+  const events = (r.data && r.data.events) || [];
+  const STATUS_LABELS = { ongoing: 'En cours', upcoming: 'À venir', past: 'Terminé' };
+  const listHtml = events.length
+    ? events.map(e => `
+        <div class="transport-row" style="align-items:flex-start;">
+          <span class="mode" style="min-width:90px;">${STATUS_LABELS[e.status] || ''}</span>
+          <span><strong>${e.title}</strong> (${e.start_date} → ${e.end_date})${e.description ? '<br>' + e.description : ''}</span>
+        </div>`).join('')
+    : '<div style="font-size:13px;color:var(--ink-soft);">Aucun événement prévu pour l\'instant.</div>';
+
+  const addFormHtml = TOKEN ? `
+    <button class="btn btn-ghost" style="color:var(--ink); border-color:var(--ink); margin-top:12px;" onclick="toggleEventForm(${destId})">+ Signaler un événement</button>
+    <div id="eventForm-${destId}" style="display:none; margin-top:12px;">
+      <input type="text" id="eventTitle-${destId}" placeholder="Titre (ex: Festival des cultures)" maxlength="120">
+      <textarea id="eventDesc-${destId}" placeholder="Description (optionnel)" rows="2" maxlength="500"></textarea>
+      <div style="display:flex; gap:10px;">
+        <input type="date" id="eventStart-${destId}">
+        <input type="date" id="eventEnd-${destId}">
+      </div>
+      <button class="btn btn-primary" style="margin-top:8px;" onclick="submitEvent(${destId})">Publier</button>
+    </div>` : '<p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px;">Connecte-toi pour signaler un événement.</p>';
+
+  container.innerHTML = listHtml + addFormHtml;
+}
+
+function toggleEventForm(destId) {
+  const form = document.getElementById(`eventForm-${destId}`);
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+async function submitEvent(destId) {
+  const title = document.getElementById(`eventTitle-${destId}`).value.trim();
+  const description = document.getElementById(`eventDesc-${destId}`).value.trim();
+  const start_date = document.getElementById(`eventStart-${destId}`).value;
+  const end_date = document.getElementById(`eventEnd-${destId}`).value;
+
+  if (!title || !start_date || !end_date) {
+    toast('Titre et dates sont obligatoires.', true);
+    return;
+  }
+
+  const r = await apiCall('POST', `/destinations/${destId}/events`, {
+    body: { title, description, start_date, end_date }, auth: true
+  });
+  if (r && r.status >= 200 && r.status < 300) {
+    toast('Événement publié.');
+    loadEvents(destId);
+  } else {
+    toast((r && r.data && r.data.error) || 'Impossible de publier cet événement.', true);
+  }
 }
 
 // ===================== Avis & notation =====================
@@ -1068,134 +1725,97 @@ async function submitReview(destId) {
   }
 }
 
-// ===================== Événements =====================
-const EVENT_STATUS_LABELS = { ongoing: 'En cours', upcoming: 'À venir', past: 'Terminé' };
+const CATEGORIES = [
+  { key: 'attraction', label: 'Attractions' },
+  { key: 'hebergement', label: 'Hébergements' },
+  { key: 'restaurant', label: 'Restaurants' },
+  { key: 'plat', label: 'Plats locaux' },
+];
 
-async function loadEvents(destId) {
-  const container = document.getElementById('eventsContent');
-  const r = await apiCall('GET', `/destinations/${destId}/events`);
-  if (!r || r.status < 200 || r.status >= 300) {
-    container.innerHTML = '<div class="event-empty">Impossible de charger les événements.</div>';
-    return;
-  }
-  const events = r.data.events || [];
-
-  const listHtml = events.length
-    ? events.map(e => `
-        <div class="event-item">
-          <div class="event-head">
-            <span class="event-title">${e.title}</span>
-            <span class="event-status ${e.status}">${EVENT_STATUS_LABELS[e.status]}</span>
-          </div>
-          <div class="event-dates">${e.start_date}${e.end_date !== e.start_date ? ' → ' + e.end_date : ''}</div>
-          ${e.description ? `<div class="event-desc">${e.description}</div>` : ''}
-        </div>`).join('')
-    : '<div class="event-empty">Aucun événement signalé pour ce lieu.</div>';
-
-  const formHtml = TOKEN ? `
-    <div style="margin-top:16px; border-top:1px dashed var(--line); padding-top:14px;">
-      <button class="btn btn-ghost" style="color:var(--ink); border-color:var(--ink);" onclick="toggleEventForm()">+ Signaler un événement</button>
-      <div id="eventForm" style="display:none; margin-top:14px;">
-        <label>Titre</label>
-        <input type="text" id="eventTitle" placeholder="Ex: Marché artisanal spécial fêtes">
-        <label>Description (optionnel)</label>
-        <input type="text" id="eventDesc" placeholder="Quelques mots sur l'événement">
-        <div class="event-form-row">
-          <div>
-            <label>Début</label>
-            <input type="date" id="eventStart">
-          </div>
-          <div>
-            <label>Fin</label>
-            <input type="date" id="eventEnd">
-          </div>
-        </div>
-        <div class="form-error" id="eventError"></div>
-        <button class="submit-btn" onclick="submitEvent(${destId})">Publier l'événement</button>
-      </div>
-    </div>
-  ` : `<div class="event-empty" style="margin-top:12px;">Connecte-toi pour signaler un événement.</div>`;
-
-  container.innerHTML = `<div style="margin-bottom:14px;">${listHtml}</div>` + formHtml;
-}
-
-function toggleEventForm() {
-  const el = document.getElementById('eventForm');
-  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
-async function submitEvent(destId) {
-  const errEl = document.getElementById('eventError');
-  errEl.textContent = '';
-  const title = document.getElementById('eventTitle').value.trim();
-  const description = document.getElementById('eventDesc').value.trim();
-  const start = document.getElementById('eventStart').value;
-  const end = document.getElementById('eventEnd').value;
-
-  if (!title) { errEl.textContent = 'Le titre est requis.'; return; }
-  if (!start || !end) { errEl.textContent = 'Indique une date de début et de fin.'; return; }
-
-  const r = await apiCall('POST', `/destinations/${destId}/events`, {
-    auth: true,
-    body: { title, description, start_date: start, end_date: end }
-  });
-  if (r && r.status >= 200 && r.status < 300) {
-    toast('Événement publié.');
-    loadEvents(destId);
-  } else {
-    errEl.textContent = (r && r.data && r.data.error) || "Impossible de publier l'événement.";
-  }
-}
-
-const exploreState = { category: '', tag: '', q: '' };
 let searchDebounce = null;
 
-async function loadExplore() {
-  const grid = document.getElementById('exploreGrid');
-  const params = new URLSearchParams();
-  if (exploreState.category) params.set('category', exploreState.category);
-  if (exploreState.tag) params.set('tag', exploreState.tag);
-  if (exploreState.q) params.set('q', exploreState.q);
-  const qs = params.toString();
-  const path = qs ? `/destinations?${qs}` : '/destinations';
-  const r = await apiCall('GET', path);
-  if (r && r.status >= 200 && r.status < 300) {
-    if (!r.data.length) {
-      grid.innerHTML = `<div class="empty-state"><strong>Aucun lieu ici</strong>Essaie un autre filtre ou une autre recherche.</div>`;
-    } else {
-      grid.innerHTML = r.data.map(d => cardHtml(d)).join('');
+async function initExplore() {
+  const wrap = document.getElementById('categorySections');
+  wrap.innerHTML = CATEGORIES.map(c => `
+    <div class="category-section" id="catsec-${c.key}">
+      <div class="section-head"><h2>${c.label}</h2></div>
+      <div class="category-filter-row" id="catfilter-${c.key}" style="display:none;"></div>
+      <div class="grid-cards" id="catgrid-${c.key}"><div class="empty-state">Chargement…</div></div>
+    </div>
+  `).join('');
+
+  for (const c of CATEGORIES) {
+    await loadCategorySection(c.key);
+  }
+}
+
+async function loadCategorySection(categoryKey, neighborhood) {
+  const grid = document.getElementById(`catgrid-${categoryKey}`);
+  const params = new URLSearchParams({ category: categoryKey });
+  if (neighborhood) params.set('neighborhood', neighborhood);
+
+  const r = await apiCall('GET', `/destinations?${params.toString()}`);
+  if (!r || r.status < 200 || r.status >= 300) {
+    grid.innerHTML = `<div class="empty-state"><strong>Impossible de charger</strong>Le service est peut-être hors ligne.</div>`;
+    return;
+  }
+
+  const items = r.data || [];
+  grid.innerHTML = items.length
+    ? items.map(d => cardHtml(d)).join('')
+    : `<div class="empty-state"><strong>Rien ici pour l'instant</strong></div>`;
+
+  // Filtre par quartier, affiché seulement si la section couvre plusieurs quartiers
+  // (utile quand un même quartier concentre plusieurs lieux, comme demandé).
+  if (!neighborhood) {
+    const filterRow = document.getElementById(`catfilter-${categoryKey}`);
+    const neighborhoods = [...new Set(items.map(i => i.neighborhood).filter(Boolean))];
+    if (neighborhoods.length > 1) {
+      filterRow.style.display = 'block';
+      filterRow.innerHTML = `
+        <select onchange="loadCategorySection('${categoryKey}', this.value)">
+          <option value="">Tous les quartiers</option>
+          ${neighborhoods.map(n => `<option value="${n}">${n}</option>`).join('')}
+        </select>`;
     }
+  }
+}
+
+async function runSearch(query) {
+  const resultsSection = document.getElementById('searchResultsSection');
+  const categorySections = document.getElementById('categorySections');
+  const grid = document.getElementById('exploreGrid');
+
+  if (!query) {
+    resultsSection.style.display = 'none';
+    categorySections.style.display = 'block';
+    return;
+  }
+
+  categorySections.style.display = 'none';
+  resultsSection.style.display = 'block';
+  grid.innerHTML = '<div class="empty-state">Recherche…</div>';
+
+  const r = await apiCall('GET', `/destinations?q=${encodeURIComponent(query)}`);
+  if (r && r.status >= 200 && r.status < 300) {
+    grid.innerHTML = r.data.length
+      ? r.data.map(d => cardHtml(d)).join('')
+      : `<div class="empty-state"><strong>Aucun résultat</strong>Essaie un autre mot-clé.</div>`;
   } else {
-    grid.innerHTML = `<div class="empty-state"><strong>Impossible de charger les lieux</strong>Le service est peut-être hors ligne.</div>`;
+    grid.innerHTML = `<div class="empty-state"><strong>Recherche indisponible</strong></div>`;
   }
 }
 
 function onSearchInput() {
   clearTimeout(searchDebounce);
   const value = document.getElementById('exploreSearch').value.trim();
-  searchDebounce = setTimeout(() => {
-    exploreState.q = value;
-    loadExplore();
-  }, 300);
+  searchDebounce = setTimeout(() => runSearch(value), 300);
 }
 
-document.getElementById('categoryChips').addEventListener('click', (e) => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  document.querySelectorAll('#categoryChips .chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
-  exploreState.category = chip.dataset.category;
-  loadExplore();
-});
-
-document.getElementById('exploreChips').addEventListener('click', (e) => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  document.querySelectorAll('#exploreChips .chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
-  exploreState.tag = chip.dataset.tag;
-  loadExplore();
-});
+function scrollToCategory(categoryKey) {
+  const section = document.getElementById(`catsec-${categoryKey}`);
+  if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 // Chips de préférences à l'inscription : multi-sélection (contrairement aux chips
 // d'exploration qui sont exclusives). C'était le bug signalé — ce listener n'existait
@@ -1277,9 +1897,9 @@ async function doCreateItinerary() {
   }
 }
 
-// ===================== Account =====================
-async function renderAccount() {
-  document.getElementById('acct-username').textContent = USERNAME || '—';
+// ===================== Dashboard =====================
+async function renderDashboard() {
+  document.getElementById('dashboard-username').textContent = USERNAME ? `, ${USERNAME}` : '';
   document.getElementById('acct-itin-count').textContent = window._itinCount !== undefined ? window._itinCount : '…';
   if (window._itinCount === undefined) {
     const r = await apiCall('GET', '/itineraries', { auth: true });
@@ -1314,7 +1934,7 @@ async function savePreferences() {
 // ===================== Boot =====================
 window.addEventListener('DOMContentLoaded', () => {
   renderSession();
-  loadExplore();
+  initExplore();
   ensureGoogleButton();
 });
 </script>
