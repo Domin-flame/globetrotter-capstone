@@ -16,6 +16,11 @@
 # colle-la manuellement (à l'identique) dans les 3 services après le premier
 # déploiement — ne laisse jamais la valeur par défaut "dev-secret-change-me"
 # en production.
+#
+# ⚠️ ADMIN_USERNAMES : ton email admin n'est plus committé dans ce fichier
+# (pour éviter de l'exposer si le repo est public). Après le premier
+# déploiement, colle-le manuellement dans les 4 services concernés
+# (Dashboard → service → Environment → ADMIN_USERNAMES → Save → redeploy).
 
 services:
   - type: web
@@ -44,7 +49,7 @@ services:
       - key: GOOGLE_CLIENT_ID
         value: 463172768839-mdof8vqp67r20vj5ca5gofv070ddsmv2.apps.googleusercontent.com
       - key: ADMIN_USERNAMES
-        value: dominicbediguile@gmail.com
+        sync: false   # ton email admin - a definir dans le dashboard Render, pas ici
 
   - type: web
     name: dzula-itinerary
@@ -56,7 +61,7 @@ services:
       - key: JWT_SECRET
         sync: false   # même valeur EXACTE que user-service
       - key: ADMIN_USERNAMES
-        value: dominicbediguile@gmail.com
+        sync: false   # ton email admin - a definir dans le dashboard Render, pas ici
 
   - type: web
     name: dzula-recommendation
@@ -70,7 +75,7 @@ services:
       - key: USER_SERVICE_URL
         value: https://dzula-user.onrender.com
       - key: ADMIN_USERNAMES
-        value: dominicbediguile@gmail.com
+        sync: false   # ton email admin - a definir dans le dashboard Render, pas ici
 
   - type: web
     name: dzula-chat
@@ -80,4 +85,6 @@ services:
     plan: free
     envVars:
       - key: JWT_SECRET
-        sync: false
+        sync: false   # même valeur EXACTE que les autres services
+      - key: ADMIN_USERNAMES
+        sync: false   # ton email admin - a definir dans le dashboard Render, pas ici

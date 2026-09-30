@@ -36,6 +36,9 @@ socketio = SocketIO(app, cors_allowed_origins="*")  # simplifié pour ce projet 
 
 JWT_SECRET = os.environ.get("JWT_SECRET", "dev-secret-change-me")
 JWT_ALGORITHM = "HS256"
+ADMIN_USERNAMES = {
+    u.strip() for u in os.environ.get("ADMIN_USERNAMES", "").split(",") if u.strip()
+}
 
 MESSAGES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "messages.json")
 MEDIA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "media")
@@ -87,6 +90,23 @@ def _verify_token(token):
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"service": "chat-service", "status": "ok"}), 200
+
+
+@app.route("/admin/stats", methods=["GET"])
+def admin_stats():
+    """Même contrat que les autres services : JWT valide + username dans
+    ADMIN_USERNAMES, sinon le gateway ne peut pas agréger /admin/stats
+    correctement (voir gateway/app.py::admin_stats)."""
+    username = _verify_token(request.headers.get("Authorization", "").removeprefix("Bearer ").strip())
+    if not username:
+        return jsonify({"error": "authentication required"}), 401
+    if username not in ADMIN_USERNAMES:
+        return jsonify({"error": "admin access required"}), 403
+    messages = _load_messages()
+    media_count = 0
+    if os.path.isdir(MEDIA_DIR):
+        media_count = len([f for f in os.listdir(MEDIA_DIR) if os.path.isfile(os.path.join(MEDIA_DIR, f))])
+    return jsonify({"messages_count": len(messages), "shared_media_count": media_count}), 200
 
 
 @app.route("/messages", methods=["GET"])

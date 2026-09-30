@@ -43,6 +43,7 @@ services:
       - "5004:5004"
     environment:
       - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
+      - ADMIN_USERNAMES=${ADMIN_USERNAMES:-}
     volumes:
       - ./chat-service/data:/app/data
     networks:
@@ -63,6 +64,7 @@ services:
       - user-service
       - itinerary-service
       - recommendation-service
+      - chat-service
 
 networks:
   globetrotter-net:

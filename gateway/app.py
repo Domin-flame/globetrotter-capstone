@@ -17,12 +17,9 @@ app = Flask(__name__, static_folder="static")
 
 @app.after_request
 def allow_google_signin_popup(response):
-    # Sans cet en-tête explicite, certains navigateurs (Edge/Chrome récents)
-    # appliquent une politique COOP par défaut qui bloque le postMessage
-    # utilisé par "Sign in with Google" pour renvoyer le jeton au popup —
-    # l'utilisateur clique, Google répond, mais le navigateur jette la
-    # réponse avant qu'elle n'atteigne notre JS. "same-origin-allow-popups"
-    # garde l'isolation d'origine tout en autorisant ce cas précis.
+    # Sans cet en-tête explicite, certains navigateurs appliquent une
+    # politique COOP par défaut qui bloque le postMessage utilisé par
+    # "Sign in with Google" pour renvoyer le jeton au popup.
     response.headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
     return response
 
@@ -72,7 +69,17 @@ IMAGE_HOSTS = {
 
 def proxy(service_key, path):
     target = f"{SERVICES[service_key]}{path}"
-    headers = {k: v for k, v in request.headers if k.lower() != "host"}
+    # On exclut Host (évidemment) ET Accept-Encoding : transmettre tel quel
+    # l'Accept-Encoding du navigateur (gzip, deflate, br) pousse Render/
+    # Cloudflare à compresser la réponse du service interne en Brotli. Le
+    # Gateway relaie ce contenu sans le décompresser (il ne recopie que
+    # Content-Type), puis Render/Cloudflare le compresse une seconde fois
+    # en le renvoyant au navigateur — qui ne décompresse qu'une seule
+    # couche et reçoit du binaire encore compressé, illisible. En omettant
+    # Accept-Encoding ici, `requests` utilise son défaut (gzip, deflate),
+    # ce qui évite toute compression Brotli sur ce trajet interne.
+    excluded = {"host", "accept-encoding"}
+    headers = {k: v for k, v in request.headers if k.lower() not in excluded}
     try:
         resp = requests.request(
             method=request.method,
