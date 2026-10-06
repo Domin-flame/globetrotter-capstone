@@ -13,12 +13,18 @@ Routes:
 """
 import json
 import os
+import importlib
 
 from flask import Flask, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
-from google.oauth2 import id_token as google_id_token
-from google.auth.transport import requests as google_auth_requests
+
+try:
+    google_id_token = importlib.import_module("google.oauth2.id_token")
+    google_auth_requests = importlib.import_module("google.auth.transport.requests")
+except ImportError:
+    google_id_token = None
+    google_auth_requests = None
 
 from models import get_user_by_username, save_user
 from auth import generate_token, get_current_user
@@ -38,7 +44,9 @@ GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 # documenté par Google comme réservé au débogage manuel et soumis à des
 # limites de débit strictes — exactement ce qui causait nos échecs
 # intermittents après un usage répété.
-_GOOGLE_AUTH_TRANSPORT = google_auth_requests.Request()
+_GOOGLE_AUTH_TRANSPORT = (
+    google_auth_requests.Request() if google_auth_requests is not None else None
+)
 
 # Chemin direct vers users.json — volontairement indépendant de models.py pour
 # ne pas dépendre de fonctions internes non confirmées (voir note à Ryan).
@@ -114,6 +122,8 @@ def google_login():
     id_token_str = data.get("id_token", "")
     if not id_token_str:
         return jsonify({"error": "id_token is required"}), 400
+    if google_id_token is None or _GOOGLE_AUTH_TRANSPORT is None:
+        return jsonify({"error": "Google authentication is unavailable"}), 503
 
     try:
         payload = google_id_token.verify_oauth2_token(
