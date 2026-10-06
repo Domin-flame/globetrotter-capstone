@@ -3,3 +3,4 @@ flask-cors==4.0.1
 pyjwt==2.9.0
 werkzeug==3.0.4
 requests==2.32.3
+google-auth>=2.34.0,<3.0.0

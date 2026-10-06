@@ -14,10 +14,11 @@ Routes:
 import json
 import os
 
-import requests as http_requests
 from flask import Flask, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_auth_requests
 
 from models import get_user_by_username, save_user
 from auth import generate_token, get_current_user
@@ -29,6 +30,15 @@ CORS(app)
 # Si laissé vide, la vérification de l'audience du jeton est simplement ignorée —
 # à ne faire qu'en développement local, jamais en production.
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
+
+# Transport réutilisé entre les requêtes : la librairie google-auth met en
+# cache les clés publiques de Google après le premier appel et vérifie
+# ensuite la signature du jeton localement, sans refaire d'appel réseau à
+# chaque connexion. On évite ainsi l'endpoint public /tokeninfo, qui est
+# documenté par Google comme réservé au débogage manuel et soumis à des
+# limites de débit strictes — exactement ce qui causait nos échecs
+# intermittents après un usage répété.
+_GOOGLE_AUTH_TRANSPORT = google_auth_requests.Request()
 
 # Chemin direct vers users.json — volontairement indépendant de models.py pour
 # ne pas dépendre de fonctions internes non confirmées (voir note à Ryan).
@@ -106,24 +116,19 @@ def google_login():
         return jsonify({"error": "id_token is required"}), 400
 
     try:
-        resp = http_requests.get(
-            "https://oauth2.googleapis.com/tokeninfo",
-            params={"id_token": id_token_str},
-            timeout=5,
+        payload = google_id_token.verify_oauth2_token(
+            id_token_str,
+            _GOOGLE_AUTH_TRANSPORT,
+            GOOGLE_CLIENT_ID or None,
         )
-    except http_requests.RequestException:
-        return jsonify({"error": "unable to verify token with Google"}), 502
-
-    if resp.status_code != 200:
+    except ValueError:
+        # Jeton invalide, expiré, mal formé, ou audience ne correspondant
+        # pas à GOOGLE_CLIENT_ID — verify_oauth2_token vérifie tout ça en
+        # un seul appel et lève ValueError si quoi que ce soit ne va pas.
         return jsonify({"error": "invalid Google token"}), 401
 
-    payload = resp.json()
-
-    if GOOGLE_CLIENT_ID and payload.get("aud") != GOOGLE_CLIENT_ID:
-        return jsonify({"error": "token audience mismatch"}), 401
-
     email = payload.get("email")
-    email_verified = payload.get("email_verified") in ("true", True)
+    email_verified = payload.get("email_verified") in (True, "true")
     if not email or not email_verified:
         return jsonify({"error": "Google account email not verified"}), 401
 
